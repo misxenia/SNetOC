@@ -1,0 +1,678 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Sparse Networks with Overlapping Communities (SNetOC) package: demo_polblogs</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-08"><meta name="DC.source" content="demo_polblogs.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Sparse Networks with Overlapping Communities (SNetOC) package: demo_polblogs</h1><!--introduction--><p>This Matlab script performs posterior inference on a network of political blogs to find latent overlapping communities, using a Bayesian nonparametric approach.</p><p>For downloading the package and information on installation, visit the <a href="https://github.com/misxenia/SNetOC">SNetOC webpage</a>.</p><p>Reference:</p><div><ul><li>A. Todeschini, X. Miscouridou and F. Caron (2017) <a href="https://arxiv.org/abs/1602.02114">Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities</a>. arXiv:1602.02114.</li></ul></div><p>Authors:</p><div><ul><li><a href="http://adrien.tspace.fr/">A. Todeschini</a>, Inria</li><li><a href="http://csml.stats.ox.ac.uk/people/miscouridou/">X. Miscouridou</a>, University of Oxford</li><li><a href="http://www.stats.ox.ac.uk/~caron/">F. Caron</a>, University of Oxford</li></ul></div><p>Tested on Matlab R2016a. Requires the Statistics toolbox.</p><p>Last Modified: 10/2017</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General settings</a></li><li><a href="#3">Load network of political blogs</a></li><li><a href="#6">Posterior Inference using Markov chain Monte Carlo and point estimation</a></li><li><a href="#10">Plots</a></li></ul></div><h2>General settings<a name="1"></a></h2><pre class="codeinput">clear
+close <span class="string">all</span>
+tstart = clock; <span class="comment">% Starting time</span>
+
+istest = true; <span class="comment">% enable testing mode: quick run with smaller nb of iterations</span>
+</pre><p>In test mode, a smaller number of iterations is run. Although the sampler clearly has not converged yet, the method already recovers well the ground truth communities. To reproduce the results of the paper, set this value to false.</p><pre class="codeinput">root = <span class="string">'.'</span>;
+<span class="keyword">if</span> istest
+    outpath = fullfile(root, <span class="string">'results'</span>, <span class="string">'demo_polblogs'</span>, <span class="string">'test'</span>);
+<span class="keyword">else</span>
+    outpath = fullfile(root, <span class="string">'results'</span>, <span class="string">'demo_polblogs'</span>, date);
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> ~isdir(outpath)
+    mkdir(outpath);
+<span class="keyword">end</span>
+
+<span class="comment">% Add path</span>
+addpath <span class="string">./GGP/</span> <span class="string">./CGGP/</span> <span class="string">./utils/</span>
+
+set(0, <span class="string">'DefaultAxesFontSize'</span>, 14)
+
+<span class="comment">% Set the seed</span>
+rng <span class="string">default</span>
+</pre><h2>Load network of political blogs<a name="3"></a></h2><p>Data can be downloaded from <a href="https://www.cise.ufl.edu/research/sparse/mat/Newman/polblogs.mat">here</a>.</p><pre class="codeinput">load <span class="string">./data/polblogs/polblogs.mat</span>
+
+titlenetwork = <span class="string">'Political blogosphere Feb. 2005'</span>;
+name = <span class="string">'polblogs'</span>;
+labels = {<span class="string">'Blogs'</span>, <span class="string">'Blogs'</span>};
+groupfield = <span class="string">'name'</span>; <span class="comment">% meta field displayed for group plot</span>
+
+<span class="comment">% Transform the graph to obtain a simple graph</span>
+G = Problem.A | Problem.A'; <span class="comment">% make undirected graph</span>
+G = logical(G-diag(diag(G))); <span class="comment">% remove self edges (#3)</span>
+
+<span class="comment">% Collect metadata</span>
+meta.name = cellstr(Problem.aux.nodename);
+meta.source = cellstr(Problem.aux.nodesource);
+meta.isright = logical(Problem.aux.nodevalue);
+meta.degree = num2cell(full(sum(G,2)));
+meta.groups = zeros(size(meta.isright));
+meta.groups(~meta.isright) = 1;
+meta.groups(meta.isright) = 2;
+color_groups = [0 0 .8; .8 0 0];
+label_groups = {<span class="string">'Left'</span>, <span class="string">'Right'</span>};
+fn = fieldnames(meta);
+
+<span class="comment">% Remove nodes with no edge (#266)</span>
+ind = any(G);
+G = G(ind, ind);
+<span class="keyword">for</span> i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+<span class="keyword">end</span>
+
+<span class="comment">% Plot adjacency matrix (sorted)</span>
+figure(<span class="string">'name'</span>, <span class="string">'Adjacency matrix (sorted by ground truth political leaning)'</span>)
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+</pre><img vspace="5" hspace="5" src="demo_polblogs_01.png" alt=""> <pre class="codeinput"><span class="comment">% Shuffle nodes: irrelevant due to exchangeability, just to check we do not cheat!</span>
+ind = randperm(size(G,1));
+G = G(ind, ind);
+<span class="keyword">for</span> i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+<span class="keyword">end</span>
+
+<span class="comment">% Plot adjacency matrix (unsorted)</span>
+figure(<span class="string">'name'</span>, <span class="string">'Adjacency matrix (unsorted)'</span>)
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+</pre><img vspace="5" hspace="5" src="demo_polblogs_02.png" alt=""> <pre class="codeinput"><span class="comment">% Plot degree distribution</span>
+figure(<span class="string">'name'</span>, <span class="string">'Empirical degree distribution'</span>)
+hdeg = plot_degree(G);
+set(hdeg, <span class="string">'markersize'</span>, 10, <span class="string">'marker'</span>, <span class="string">'o'</span>,<span class="string">'markeredgecolor'</span>, <span class="string">'none'</span>, <span class="string">'markerfacecolor'</span>, [1, .75, .75]);
+</pre><img vspace="5" hspace="5" src="demo_polblogs_03.png" alt=""> <h2>Posterior Inference using Markov chain Monte Carlo and point estimation<a name="6"></a></h2><p>Users needs to start the parallel pool by using the command <b>parpool</b> to run multiple chains in parallel.</p><pre class="codeinput"><span class="comment">% Define the parameters of the prior</span>
+p = 2; <span class="comment">% Number of commmunities</span>
+objprior =  graphmodel(<span class="string">'CGGP'</span>, p); <span class="comment">% CGGP graph model with p communities</span>
+
+<span class="comment">% Define parameters of the MCMC sampler</span>
+nchains = 3;
+<span class="keyword">if</span> istest
+    niterinit = 1000;
+    niter = 10000;
+    nsamples = 100;
+<span class="keyword">else</span>
+    niterinit = 10000;
+    niter = 200000;
+    nsamples = 500;
+<span class="keyword">end</span>
+nburn = floor(niter/2);
+
+thin = ceil((niter-nburn)/nsamples);
+verbose = true;
+
+<span class="comment">% Create the graphMCMC object</span>
+objmcmc = graphmcmc(objprior, niter, nburn, thin, nchains);
+
+<span class="comment">% Run initialisation</span>
+init = graphinit(objmcmc, G, niterinit);
+</pre><pre class="codeoutput">-----------------------------------
+Start initialisation of the MCMC algorithm for CGGP
+-----------------------------------
+End initialisation
+-----------------------------------
+</pre><pre class="codeinput"><span class="comment">% Run MCMC sampler</span>
+objmcmc = graphmcmcsamples(objmcmc, G, verbose, init);
+</pre><pre class="codeoutput">-----------------------------------
+Start MCMC for CGGP graphs
+Nb of nodes: 1224 - Nb of edges: 16715 (0 missing)
+Nb of chains: 3 - Nb of iterations: 10000
+Nb of parallel workers: 1
+Estimated computation time: 0 hour(s) 2 minute(s)
+Estimated end of computation: 08-Nov-2017 18:03:33 
+-----------------------------------
+ Markov chain 1/3 
+-----------------------------------
+i=2000 alp=853.49 sig=-0.318 tau=2.23 a=0.22 0.20 b=0.41 0.51 w*=0.52 0.40 b2=0.91 1.13 alp2=661.59 rhmc=0.68 rhyp=0.32 eps=0.028 rwsd=0.054
+i=4000 alp=1625.62 sig=-0.482 tau=3.37 a=0.20 0.16 b=0.40 0.31 w*=0.46 0.50 b2=1.35 1.04 alp2=905.44 rhmc=0.72 rhyp=0.23 eps=0.022 rwsd=0.054
+i=6000 alp=1787.89 sig=-0.462 tau=4.23 a=0.17 0.14 b=0.27 0.23 w*=0.51 0.52 b2=1.14 0.99 alp2=917.85 rhmc=0.83 rhyp=0.24 eps=0.022 rwsd=0.054
+i=8000 alp=1899.11 sig=-0.474 tau=4.23 a=0.16 0.14 b=0.27 0.26 w*=0.56 0.43 b2=1.14 1.11 alp2=958.50 rhmc=0.83 rhyp=0.26 eps=0.022 rwsd=0.054
+i=10000 alp=1988.12 sig=-0.496 tau=3.79 a=0.15 0.13 b=0.30 0.32 w*=0.47 0.36 b2=1.13 1.22 alp2=1026.23 rhmc=0.82 rhyp=0.23 eps=0.022 rwsd=0.054
+-----------------------------------
+ Markov chain 2/3 
+-----------------------------------
+i=2000 alp=704.00 sig=-0.235 tau=2.52 a=0.21 0.21 b=0.44 0.32 w*=0.50 0.55 b2=1.11 0.80 alp2=566.75 rhmc=0.67 rhyp=0.32 eps=0.024 rwsd=0.054
+i=4000 alp=1259.23 sig=-0.379 tau=3.55 a=0.16 0.17 b=0.28 0.25 w*=0.41 0.56 b2=1.00 0.87 alp2=779.78 rhmc=0.77 rhyp=0.23 eps=0.022 rwsd=0.052
+i=6000 alp=1958.77 sig=-0.467 tau=4.44 a=0.14 0.18 b=0.21 0.28 w*=0.43 0.47 b2=0.92 1.23 alp2=976.18 rhmc=0.82 rhyp=0.25 eps=0.022 rwsd=0.052
+i=8000 alp=2059.08 sig=-0.505 tau=4.33 a=0.15 0.17 b=0.27 0.31 w*=0.46 0.42 b2=1.16 1.32 alp2=983.15 rhmc=0.82 rhyp=0.25 eps=0.022 rwsd=0.052
+i=10000 alp=1942.87 sig=-0.493 tau=3.97 a=0.15 0.17 b=0.31 0.23 w*=0.34 0.54 b2=1.21 0.90 alp2=984.37 rhmc=0.81 rhyp=0.26 eps=0.022 rwsd=0.052
+-----------------------------------
+ Markov chain 3/3 
+-----------------------------------
+i=2000 alp=444.90 sig=-0.129 tau=1.93 a=0.22 0.23 b=0.19 0.32 w*=0.49 0.45 b2=0.37 0.61 alp2=408.74 rhmc=0.68 rhyp=0.32 eps=0.038 rwsd=0.052
+i=4000 alp=1226.02 sig=-0.358 tau=4.20 a=0.19 0.17 b=0.20 0.21 w*=0.46 0.40 b2=0.86 0.89 alp2=733.18 rhmc=0.70 rhyp=0.24 eps=0.021 rwsd=0.053
+i=6000 alp=1367.94 sig=-0.376 tau=4.33 a=0.17 0.15 b=0.20 0.22 w*=0.52 0.39 b2=0.88 0.94 alp2=788.40 rhmc=0.84 rhyp=0.24 eps=0.021 rwsd=0.053
+i=8000 alp=2250.42 sig=-0.499 tau=5.26 a=0.18 0.14 b=0.24 0.20 w*=0.48 0.38 b2=1.26 1.07 alp2=981.84 rhmc=0.84 rhyp=0.25 eps=0.021 rwsd=0.053
+i=10000 alp=2427.51 sig=-0.534 tau=5.11 a=0.16 0.15 b=0.20 0.25 w*=0.47 0.45 b2=1.04 1.26 alp2=1015.77 rhmc=0.84 rhyp=0.23 eps=0.021 rwsd=0.053
+-----------------------------------
+End MCMC
+Computation time: 0 hour(s) 2 minute(s)
+-----------------------------------
+</pre><pre class="codeinput"><span class="comment">% Print summary in text file</span>
+print_summary([<span class="string">'summary_'</span> num2str(p) <span class="string">'f.txt'</span>], titlenetwork, G, niter, nburn, nchains, thin, p, outpath, tstart)
+</pre><pre class="codeinput"><span class="comment">% Point estimation of the model parameters</span>
+[estimates, C_st] = graphest(objmcmc);
+
+<span class="comment">% Save workspace</span>
+save(fullfile(outpath, [<span class="string">'workspace_'</span> num2str(p) <span class="string">'f.mat'</span>]))
+</pre><pre class="codeoutput">-----------------------------------
+Start parameters estimation for CGGP graphs: 300 samples
+Estimated end of computation: 08-Nov-2017 18:03:38 (0.0 hours)
+|---------------------------------|
+|*********************************|
+End parameters estimation for CGGP graphs
+Computation time: 0.0 hours
+-----------------------------------
+</pre><h2>Plots<a name="10"></a></h2><pre class="codeinput">prefix = sprintf(<span class="string">'%s_%df_'</span>, name, p);
+suffix = <span class="string">''</span>;
+</pre><pre class="codeinput"><span class="comment">% Identify each feature to left/right wing using ground truth</span>
+<span class="comment">% (This step would normally require a human interpretation of the features)</span>
+[~, ind_features] = sort(median(estimates.w(meta.isright,:), 1)./median(estimates.w, 1));
+featnames = {<span class="string">'Liberal'</span>, <span class="string">'Conservative'</span>};
+
+<span class="comment">% Print classification performance with ground truth</span>
+[~, nodefeat] = max(estimates.w, [],2); <span class="comment">% Assign each node to the feature with highest weight</span>
+[confmat] = print_classif(fullfile(outpath, [<span class="string">'classif_'</span> num2str(p) <span class="string">'f.txt'</span>]), <span class="keyword">...</span>
+    nodefeat, meta.groups, ind_features, label_groups);
+</pre><pre class="codeoutput">Classification performance
+==========================
+Confusion matrix (counts)
+-------------------------
+Group        : Feat 1 Feat 2 | Total
+Left         :    530     58 |   588
+Right        :     22    614 |   636
+Total        :    552    672 |  1224
+-------------------------
+Confusion matrix (%)
+-------------------------
+Group        : Feat 1 Feat 2 | Total
+Left         :  43.30   4.74 | 48.04
+Right        :   1.80  50.16 | 51.96
+Total        :  45.10  54.90 |100.00
+-------------------------
+Group assignments of features
+-------------------------
+Feat 1: Left
+Feat 2: Right
+-------------------------
+Accuracy = 93.46
+Error = 6.54
+==========================
+</pre><pre class="codeinput"><span class="comment">% Plot traces and histograms</span>
+variables = {<span class="string">'logalpha'</span>, <span class="string">'sigma'</span>, <span class="string">'tau'</span>, <span class="string">'Fparam.a'</span>, <span class="string">'Fparam.b'</span>, <span class="string">'mean_w_rem'</span>};
+namesvar = {<span class="string">'$\log \alpha$'</span>, <span class="string">'$\sigma$'</span>, <span class="string">'$\tau$'</span>, <span class="string">'$a$'</span>, <span class="string">'$b$'</span>, <span class="string">'$\overline{w}_{\ast}$'</span>};
+plot_trace(objmcmc.samples, objmcmc.settings, variables, namesvar, [], outpath, prefix, suffix);
+plot_hist(objmcmc.samples, variables, namesvar, [], ind_features, [], outpath, prefix, suffix);
+</pre><img vspace="5" hspace="5" src="demo_polblogs_04.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_05.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_06.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_07.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_08.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_09.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_10.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_11.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_12.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_13.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_14.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_15.png" alt=""> <pre class="codeinput"><span class="comment">% Plot cost</span>
+<span class="keyword">if</span> ~isempty(C_st)
+    plot_cost(C_st, outpath, prefix, suffix);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="demo_polblogs_16.png" alt=""> <pre class="codeinput"><span class="comment">% Plot the graph by sorting the nodes by max feature to see block structure</span>
+plot_sortedgraph(G, nodefeat, nodefeat, ind_features, labels, outpath, prefix, suffix, {<span class="string">'png'</span>});
+</pre><img vspace="5" hspace="5" src="demo_polblogs_17.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_18.png" alt=""> <pre class="codeinput"><span class="comment">% Show the proportion in each features for a few nodes</span>
+<span class="keyword">if</span> p==2
+    color = color_groups;
+<span class="keyword">elseif</span> p==5
+    color = [0 0 .5; .3 .3 1 ; 0.8 0.8 0.8 ; 1 .3 .3; .5 0 0];
+<span class="keyword">end</span>
+
+<span class="keyword">if</span> isfield(meta, <span class="string">'groups'</span>)
+    <span class="comment">% Plots by groups right vs left</span>
+    plot_groups(estimates.w, meta.groups, meta.(groupfield), ind_features, label_groups, featnames, <span class="keyword">...</span>
+        color_groups, outpath, prefix, suffix);
+
+    y = sum(estimates.w,2);
+    x = estimates.w(:,ind_features(2))./y;
+    figure; hold <span class="string">on</span>
+    <span class="keyword">for</span> i=1:numel(label_groups)
+        ind = meta.groups==i;
+        stem(x(ind), y(ind), <span class="string">'o'</span>, <span class="string">'markersize'</span>, 5, <span class="string">'color'</span>, color(i,:))
+    <span class="keyword">end</span>
+    xlabel(<span class="string">'$w_{2}/\vert w \vert$'</span>, <span class="string">'interpreter'</span>, <span class="string">'latex'</span>, <span class="string">'fontsize'</span>, 20)
+    ylabel(<span class="string">'$\vert w \vert$'</span>, <span class="string">'interpreter'</span>, <span class="string">'latex'</span>, <span class="string">'fontsize'</span>, 20)
+    text([0,.75], [-.5, -.5], featnames, <span class="string">'fontsize'</span>, 16)
+    legend(label_groups, <span class="string">'fontsize'</span>, 16)
+    legend <span class="string">boxoff</span>
+    axis <span class="string">tight</span>
+    xlim([0,1])
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="demo_polblogs_19.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_20.png" alt=""> <img vspace="5" hspace="5" src="demo_polblogs_21.png" alt=""> <pre class="codeinput"><span class="comment">% Plot normalized weights for a subset of blogs</span>
+prop_nodes = estimates.w(:,1)./sum(estimates.w, 2);
+names = {<span class="string">'blogsforbush.com'</span>
+    <span class="string">'instapundit.com'</span>
+    <span class="string">'drudgereport.com'</span>
+    <span class="string">'tagorda.com'</span>
+    <span class="string">'danieldrezner.com/blog'</span>
+    <span class="string">'andrewsullivan.com'</span>
+    <span class="string">'iwantmycountryback.org'</span>
+    <span class="string">'democraticunderground.com'</span>
+    <span class="string">'wonkette.com'</span>
+    <span class="string">'washingtonmonthly.com'</span>
+    <span class="string">'dailykos.com'</span>
+    <span class="string">'atrios.blogspot.com'</span>};
+ind = zeros(size(names,1),1);
+lab = cell(size(names,1), 1);
+<span class="keyword">for</span> i=1:size(names,1)
+    ind(i) = find(strcmp(meta.name, names{i}) &amp; strcmp(meta.name, names{i,1}));
+    lab{i} = sprintf(<span class="string">'%s (%s)'</span>, names{i}, label_groups{meta.groups(ind(i))}(1));
+<span class="comment">%     fprintf('%2d. (%.2f) #%d, %s\n', i, prop_nodes(ind(i)), meta.degree{ind(i)}, lab{i});</span>
+<span class="keyword">end</span>
+plot_nodesfeatures(estimates.w, ind, ind_features, lab, featnames, color, outpath, prefix, suffix);
+</pre><img vspace="5" hspace="5" src="demo_polblogs_22.png" alt=""> <pre class="codeinput"><span class="comment">% Show blogs with highest weight in each feature</span>
+meta.wing = cell(meta.name);
+meta.wing(meta.isright) = repmat({<span class="string">'R'</span>}, sum(meta.isright), 1);
+meta.wing(~meta.isright) = repmat({<span class="string">'L'</span>}, sum(~meta.isright), 1);
+
+fnames = {<span class="string">'degree'</span>, <span class="string">'name'</span>, <span class="string">'wing'</span>};
+formats = {<span class="string">'#%d,'</span>, <span class="string">'%s'</span>, <span class="string">'(%s).'</span>}; <span class="comment">%</span>
+<span class="comment">% Nodes with highest weight in each feature</span>
+fprintf(<span class="string">'-----------------------------------\n'</span>)
+fprintf(<span class="string">'Nodes with highest weights in each feature\n'</span>)
+fprintf(<span class="string">'#edges, name of blog (Political leaning)\n'</span>)
+fprintf(<span class="string">'-----------------------------------\n'</span>)
+print_features( [outpath <span class="string">'features_'</span> num2str(p) <span class="string">'f.txt'</span>], <span class="keyword">...</span>
+    estimates.w, ind_features, [], meta, fnames, formats );
+fprintf(<span class="string">'-----------------------------------\n'</span>)
+</pre><pre class="codeoutput">-----------------------------------
+Nodes with highest weights in each feature
+#edges, name of blog (Political leaning)
+-----------------------------------
+&amp; %--- FEATURE 1 ---
+#351, dailykos.com (L). 
+#277, atrios.blogspot.com (L). 
+#274, talkingpointsmemo.com (L). 
+#218, washingtonmonthly.com (L). 
+#171, liberaloasis.com (L). 
+#147, digbysblog.blogspot.com (L). 
+#170, juancole.com (L). 
+#149, newleftblogs.blogspot.com (L). 
+#137, politicalstrategy.org (L). 
+#144, pandagon.net (L). 
+&amp; %--- FEATURE 2 ---
+#306, instapundit.com (R). 
+#301, blogsforbush.com (R). 
+#211, michellemalkin.com (R). 
+#223, powerlineblog.com (R). 
+#182, hughhewitt.com (R). 
+#196, littlegreenfootballs.com/weblog (R). 
+#243, drudgereport.com (R). 
+#179, wizbangblog.com (R). 
+#170, lashawnbarber.com (R). 
+#199, truthlaidbear.com (R). 
+-----------------------------------
+</pre><pre class="codeinput"><span class="comment">% Correlation between the features</span>
+figure(<span class="string">'name'</span>, <span class="string">'Correlation between features'</span>);
+imagesc(corr(estimates.w(:,ind_features)));
+colormap(<span class="string">'gray'</span>)
+caxis([0,1])
+colorbar
+xlabel(<span class="string">'Feature'</span>)
+ylabel(<span class="string">'Feature'</span>)
+title(<span class="string">'Correlation between features'</span>)
+</pre><img vspace="5" hspace="5" src="demo_polblogs_23.png" alt=""> <pre class="codeinput"><span class="comment">% Plot posterior predictive of degree distribution</span>
+plot_degreepostpred(G, objmcmc, nsamples, 1e-6, outpath, prefix, suffix);
+</pre><pre class="codeoutput">-----------------------------------
+Start degree posterior predictive estimation: 100 draws
+Estimated end of computation: 08-Nov-2017 18:04:16 (0.0 hours)
+|---------------------------------|
+|*********************************|
+End degree posterior predictive (0.0 hours)
+-----------------------------------
+</pre><img vspace="5" hspace="5" src="demo_polblogs_24.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Sparse Networks with Overlapping Communities (SNetOC) package: demo_polblogs
+%
+% This Matlab script performs posterior inference on a network of political
+% blogs to find latent overlapping communities, using a Bayesian
+% nonparametric approach.
+%
+% For downloading the package and information on installation, visit the
+% <https://github.com/misxenia/SNetOC SNetOC webpage>.
+% 
+% Reference: 
+%
+% * A. Todeschini, X. Miscouridou and F. Caron (2017) <https://arxiv.org/abs/1602.02114 Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities>. arXiv:1602.02114.
+%
+% Authors: 
+%
+% * <http://adrien.tspace.fr/ A. Todeschini>, Inria
+% * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
+% * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
+% 
+% Tested on Matlab R2016a. Requires the Statistics toolbox.
+%
+% Last Modified: 10/2017
+%%
+
+%% General settings
+%
+
+clear
+close all
+tstart = clock; % Starting time
+
+istest = true; % enable testing mode: quick run with smaller nb of iterations
+
+%%
+% In test mode, a smaller number of iterations is run. Although the sampler
+% clearly has not converged yet, the method already recovers well the ground truth
+% communities. To reproduce the results of the paper, set this value to
+% false. 
+
+root = '.';
+if istest
+    outpath = fullfile(root, 'results', 'demo_polblogs', 'test');
+else
+    outpath = fullfile(root, 'results', 'demo_polblogs', date);
+end
+
+if ~isdir(outpath)
+    mkdir(outpath);
+end
+
+% Add path
+addpath ./GGP/ ./CGGP/ ./utils/
+
+set(0, 'DefaultAxesFontSize', 14)
+
+% Set the seed
+rng default
+
+%% Load network of political blogs
+% Data can be downloaded from
+% <https://www.cise.ufl.edu/research/sparse/mat/Newman/polblogs.mat here>.
+
+load ./data/polblogs/polblogs.mat
+
+titlenetwork = 'Political blogosphere Feb. 2005';
+name = 'polblogs';
+labels = {'Blogs', 'Blogs'};
+groupfield = 'name'; % meta field displayed for group plot
+
+% Transform the graph to obtain a simple graph
+G = Problem.A | Problem.A'; % make undirected graph
+G = logical(G-diag(diag(G))); % remove self edges (#3)
+
+% Collect metadata
+meta.name = cellstr(Problem.aux.nodename);
+meta.source = cellstr(Problem.aux.nodesource);
+meta.isright = logical(Problem.aux.nodevalue);
+meta.degree = num2cell(full(sum(G,2)));
+meta.groups = zeros(size(meta.isright));
+meta.groups(~meta.isright) = 1;
+meta.groups(meta.isright) = 2;
+color_groups = [0 0 .8; .8 0 0];
+label_groups = {'Left', 'Right'};
+fn = fieldnames(meta);
+
+% Remove nodes with no edge (#266)
+ind = any(G);
+G = G(ind, ind);
+for i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+end
+
+% Plot adjacency matrix (sorted)
+figure('name', 'Adjacency matrix (sorted by ground truth political leaning)')
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+
+%%
+
+% Shuffle nodes: irrelevant due to exchangeability, just to check we do not cheat!
+ind = randperm(size(G,1));
+G = G(ind, ind);
+for i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+end
+
+% Plot adjacency matrix (unsorted)
+figure('name', 'Adjacency matrix (unsorted)')
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+
+%%
+
+% Plot degree distribution
+figure('name', 'Empirical degree distribution')
+hdeg = plot_degree(G);
+set(hdeg, 'markersize', 10, 'marker', 'o','markeredgecolor', 'none', 'markerfacecolor', [1, .75, .75]);
+
+%% Posterior Inference using Markov chain Monte Carlo and point estimation
+% Users needs to start the parallel pool by using the command *parpool* to run multiple chains in parallel.
+
+% Define the parameters of the prior
+p = 2; % Number of commmunities
+objprior =  graphmodel('CGGP', p); % CGGP graph model with p communities
+
+% Define parameters of the MCMC sampler
+nchains = 3;
+if istest
+    niterinit = 1000;
+    niter = 10000;
+    nsamples = 100; 
+else
+    niterinit = 10000;
+    niter = 200000;
+    nsamples = 500; 
+end   
+nburn = floor(niter/2);
+
+thin = ceil((niter-nburn)/nsamples); 
+verbose = true;
+
+% Create the graphMCMC object
+objmcmc = graphmcmc(objprior, niter, nburn, thin, nchains);
+
+% Run initialisation
+init = graphinit(objmcmc, G, niterinit);
+
+%%
+
+% Run MCMC sampler
+objmcmc = graphmcmcsamples(objmcmc, G, verbose, init);
+
+%%
+
+% Print summary in text file
+print_summary(['summary_' num2str(p) 'f.txt'], titlenetwork, G, niter, nburn, nchains, thin, p, outpath, tstart)
+
+%%
+
+% Point estimation of the model parameters
+[estimates, C_st] = graphest(objmcmc);
+
+% Save workspace
+save(fullfile(outpath, ['workspace_' num2str(p) 'f.mat']))
+
+%% Plots 
+
+prefix = sprintf('%s_%df_', name, p);
+suffix = '';
+
+%%
+
+% Identify each feature to left/right wing using ground truth 
+% (This step would normally require a human interpretation of the features)
+[~, ind_features] = sort(median(estimates.w(meta.isright,:), 1)./median(estimates.w, 1));
+featnames = {'Liberal', 'Conservative'};
+
+% Print classification performance with ground truth
+[~, nodefeat] = max(estimates.w, [],2); % Assign each node to the feature with highest weight
+[confmat] = print_classif(fullfile(outpath, ['classif_' num2str(p) 'f.txt']), ...
+    nodefeat, meta.groups, ind_features, label_groups);
+
+%%
+
+% Plot traces and histograms
+variables = {'logalpha', 'sigma', 'tau', 'Fparam.a', 'Fparam.b', 'mean_w_rem'};
+namesvar = {'$\log \alpha$', '$\sigma$', '$\tau$', '$a$', '$b$', '$\overline{w}_{\ast}$'};
+plot_trace(objmcmc.samples, objmcmc.settings, variables, namesvar, [], outpath, prefix, suffix);
+plot_hist(objmcmc.samples, variables, namesvar, [], ind_features, [], outpath, prefix, suffix);
+
+%%
+
+% Plot cost
+if ~isempty(C_st)
+    plot_cost(C_st, outpath, prefix, suffix);
+end
+
+
+
+%%
+
+% Plot the graph by sorting the nodes by max feature to see block structure
+plot_sortedgraph(G, nodefeat, nodefeat, ind_features, labels, outpath, prefix, suffix, {'png'});
+
+%%
+
+% Show the proportion in each features for a few nodes
+if p==2
+    color = color_groups;
+elseif p==5
+    color = [0 0 .5; .3 .3 1 ; 0.8 0.8 0.8 ; 1 .3 .3; .5 0 0];
+end
+
+if isfield(meta, 'groups')
+    % Plots by groups right vs left
+    plot_groups(estimates.w, meta.groups, meta.(groupfield), ind_features, label_groups, featnames, ...
+        color_groups, outpath, prefix, suffix);
+    
+    y = sum(estimates.w,2);
+    x = estimates.w(:,ind_features(2))./y;
+    figure; hold on
+    for i=1:numel(label_groups)
+        ind = meta.groups==i;
+        stem(x(ind), y(ind), 'o', 'markersize', 5, 'color', color(i,:))
+    end
+    xlabel('$w_{2}/\vert w \vert$', 'interpreter', 'latex', 'fontsize', 20)
+    ylabel('$\vert w \vert$', 'interpreter', 'latex', 'fontsize', 20)
+    text([0,.75], [-.5, -.5], featnames, 'fontsize', 16)
+    legend(label_groups, 'fontsize', 16)
+    legend boxoff
+    axis tight
+    xlim([0,1])
+end
+
+%%
+
+% Plot normalized weights for a subset of blogs
+prop_nodes = estimates.w(:,1)./sum(estimates.w, 2);
+names = {'blogsforbush.com'
+    'instapundit.com'
+    'drudgereport.com'
+    'tagorda.com'
+    'danieldrezner.com/blog'
+    'andrewsullivan.com'
+    'iwantmycountryback.org'
+    'democraticunderground.com'
+    'wonkette.com'
+    'washingtonmonthly.com'
+    'dailykos.com'
+    'atrios.blogspot.com'};
+ind = zeros(size(names,1),1);
+lab = cell(size(names,1), 1);
+for i=1:size(names,1)
+    ind(i) = find(strcmp(meta.name, names{i}) & strcmp(meta.name, names{i,1}));
+    lab{i} = sprintf('%s (%s)', names{i}, label_groups{meta.groups(ind(i))}(1));
+%     fprintf('%2d. (%.2f) #%d, %s\n', i, prop_nodes(ind(i)), meta.degree{ind(i)}, lab{i});
+end
+plot_nodesfeatures(estimates.w, ind, ind_features, lab, featnames, color, outpath, prefix, suffix);
+
+%%
+
+% Show blogs with highest weight in each feature
+meta.wing = cell(meta.name);
+meta.wing(meta.isright) = repmat({'R'}, sum(meta.isright), 1);
+meta.wing(~meta.isright) = repmat({'L'}, sum(~meta.isright), 1);
+
+fnames = {'degree', 'name', 'wing'};
+formats = {'#%d,', '%s', '(%s).'}; % 
+% Nodes with highest weight in each feature
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+fprintf('Nodes with highest weights in each feature\n')
+fprintf('#edges, name of blog (Political leaning)\n')
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+print_features( [outpath 'features_' num2str(p) 'f.txt'], ...
+    estimates.w, ind_features, [], meta, fnames, formats );
+fprintf('REPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASHREPLACE_WITH_DASH_DASH-\n')
+
+%%
+
+% Correlation between the features
+figure('name', 'Correlation between features');
+imagesc(corr(estimates.w(:,ind_features)));
+colormap('gray')
+caxis([0,1])
+colorbar
+xlabel('Feature')
+ylabel('Feature')
+title('Correlation between features')
+
+%%
+
+% Plot posterior predictive of degree distribution
+plot_degreepostpred(G, objmcmc, nsamples, 1e-6, outpath, prefix, suffix);
+##### SOURCE END #####
+--></body></html>

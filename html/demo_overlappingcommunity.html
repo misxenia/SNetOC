@@ -1,0 +1,354 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Sparse Networks with Overlapping Communities (SNOC) package: demo_overlappingcommunity</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-08"><meta name="DC.source" content="demo_overlappingcommunity.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Sparse Networks with Overlapping Communities (SNOC) package: demo_overlappingcommunity</h1><!--introduction--><p>This Matlab script finds overlapping communities in a network of political blogs, using the wrapper function overlapping_community_detection.m. For a full analysis of this dataset, see the Matlab demo demo_polblogs.m.</p><p>For downloading the package and information on installation, visit the <a href="https://github.com/misxenia/SNOC">SNOC webpage</a>.</p><p>Reference:</p><div><ul><li>A. Todeschini, X. Miscouridou and F. Caron (2017) <a href="https://arxiv.org/abs/1602.02114">Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities</a>. arXiv:1602.02114.</li></ul></div><p>Authors:</p><div><ul><li><a href="http://adrien.tspace.fr/">A. Todeschini</a>, Inria</li><li><a href="http://csml.stats.ox.ac.uk/people/miscouridou/">X. Miscouridou</a>, University of Oxford</li><li><a href="http://www.stats.ox.ac.uk/~caron/">F. Caron</a>, University of Oxford</li></ul></div><p>Tested on Matlab R2016a. Requires the statistics toolbox.</p><p>Last Modified: 07/11/2017</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#2">Load network of political blogs</a></li><li><a href="#4">Find overlapping communities</a></li><li><a href="#5">Some plots</a></li></ul></div><pre class="codeinput">close <span class="string">all</span>
+clear <span class="string">all</span>
+
+<span class="comment">% Add path</span>
+addpath <span class="string">./GGP/</span> <span class="string">./CGGP/</span> <span class="string">./utils/</span>
+</pre><h2>Load network of political blogs<a name="2"></a></h2><p>Data can be downloaded from <a href="https://www.cise.ufl.edu/research/sparse/mat/Newman/polblogs.mat">here</a>.</p><pre class="codeinput">load <span class="string">./data/polblogs/polblogs.mat</span>
+
+titlenetwork = <span class="string">'Political blogosphere Feb. 2005'</span>;
+name = <span class="string">'polblogs'</span>;
+labels = {<span class="string">'Blogs'</span>, <span class="string">'Blogs'</span>};
+groupfield = <span class="string">'name'</span>; <span class="comment">% meta field displayed for group plot</span>
+
+<span class="comment">% Transform the graph to obtain a simple graph</span>
+G = Problem.A | Problem.A'; <span class="comment">% make undirected graph</span>
+G = logical(G-diag(diag(G))); <span class="comment">% remove self edges (#3)</span>
+
+<span class="comment">% Collect metadata</span>
+meta.name = cellstr(Problem.aux.nodename);
+meta.source = cellstr(Problem.aux.nodesource);
+meta.isright = logical(Problem.aux.nodevalue);
+meta.degree = num2cell(full(sum(G,2)));
+meta.groups = zeros(size(meta.isright));
+meta.groups(~meta.isright) = 1;
+meta.groups(meta.isright) = 2;
+color_groups = [0 0 .8; .8 0 0];
+label_groups = {<span class="string">'Left'</span>, <span class="string">'Right'</span>};
+fn = fieldnames(meta);
+
+<span class="comment">% Remove nodes with no edge (#266)</span>
+ind = any(G);
+G = G(ind, ind);
+<span class="keyword">for</span> i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+<span class="keyword">end</span>
+
+<span class="comment">% Plot adjacency matrix (sorted)</span>
+figure(<span class="string">'name'</span>, <span class="string">'Adjacency matrix (sorted by ground truth political leaning)'</span>)
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+</pre><img vspace="5" hspace="5" src="demo_overlappingcommunity_01.png" alt=""> <pre class="codeinput"><span class="comment">% Shuffle nodes: irrelevant due to exchangeability, just to check we do not cheat!</span>
+ind = randperm(size(G,1));
+G = G(ind, ind);
+<span class="keyword">for</span> i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+<span class="keyword">end</span>
+
+<span class="comment">% Plot adjacency matrix (unsorted)</span>
+figure(<span class="string">'name'</span>, <span class="string">'Adjacency matrix (unsorted)'</span>)
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+</pre><img vspace="5" hspace="5" src="demo_overlappingcommunity_02.png" alt=""> <h2>Find overlapping communities<a name="4"></a></h2><pre class="codeinput">p = 2; <span class="comment">% Number of communities</span>
+niter = 20000; <span class="comment">% Number of iterations</span>
+[degree_correction, community_affiliation, community_detection] = overlapping_community_detection(G, p, niter);
+</pre><pre class="codeoutput">-----------------------------------
+Start initialisation of the MCMC algorithm for CGGP
+-----------------------------------
+End initialisation
+-----------------------------------
+-----------------------------------
+Start MCMC for CGGP graphs
+Nb of nodes: 1224 - Nb of edges: 16715 (0 missing)
+Nb of chains: 1 - Nb of iterations: 20000
+Nb of parallel workers: 1
+Estimated computation time: 0 hour(s) 2 minute(s)
+Estimated end of computation: 08-Nov-2017 18:01:19 
+-----------------------------------
+ Markov chain 1/1 
+-----------------------------------
+i=2000 alp=669.22 sig=-0.255 tau=1.98 a=0.23 0.18 b=0.46 0.39 w*=0.56 0.36 b2=0.90 0.78 alp2=562.24 rhmc=0.63 rhyp=0.30 eps=0.025 rwsd=0.049
+i=4000 alp=1604.00 sig=-0.450 tau=3.68 a=0.20 0.15 b=0.39 0.27 w*=0.50 0.41 b2=1.42 1.01 alp2=892.66 rhmc=0.70 rhyp=0.25 eps=0.04 rwsd=0.058
+i=6000 alp=1718.53 sig=-0.453 tau=3.48 a=0.18 0.14 b=0.36 0.31 w*=0.47 0.39 b2=1.24 1.06 alp2=977.03 rhmc=0.56 rhyp=0.22 eps=0.025 rwsd=0.056
+i=8000 alp=1687.01 sig=-0.450 tau=3.93 a=0.18 0.15 b=0.32 0.29 w*=0.47 0.39 b2=1.24 1.12 alp2=911.42 rhmc=0.78 rhyp=0.23 eps=0.025 rwsd=0.056
+i=10000 alp=1799.57 sig=-0.468 tau=3.91 a=0.16 0.13 b=0.29 0.24 w*=0.46 0.41 b2=1.13 0.92 alp2=950.12 rhmc=0.79 rhyp=0.23 eps=0.025 rwsd=0.056
+i=12000 alp=2018.04 sig=-0.458 tau=4.47 a=0.16 0.13 b=0.28 0.20 w*=0.50 0.49 b2=1.24 0.89 alp2=1016.53 rhmc=0.78 rhyp=0.23 eps=0.025 rwsd=0.056
+i=14000 alp=1999.09 sig=-0.459 tau=4.66 a=0.15 0.12 b=0.18 0.19 w*=0.46 0.42 b2=0.84 0.88 alp2=985.82 rhmc=0.78 rhyp=0.23 eps=0.025 rwsd=0.056
+i=16000 alp=2012.28 sig=-0.491 tau=3.99 a=0.14 0.12 b=0.23 0.22 w*=0.55 0.37 b2=0.92 0.88 alp2=1019.78 rhmc=0.78 rhyp=0.23 eps=0.025 rwsd=0.056
+i=18000 alp=1805.01 sig=-0.456 tau=3.90 a=0.14 0.12 b=0.28 0.24 w*=0.50 0.41 b2=1.11 0.95 alp2=970.22 rhmc=0.78 rhyp=0.23 eps=0.025 rwsd=0.056
+i=20000 alp=1790.90 sig=-0.486 tau=3.11 a=0.13 0.12 b=0.27 0.33 w*=0.56 0.42 b2=0.84 1.03 alp2=1032.27 rhmc=0.77 rhyp=0.24 eps=0.025 rwsd=0.056
+-----------------------------------
+End MCMC
+Computation time: 0 hour(s) 1 minute(s)
+-----------------------------------
+-----------------------------------
+Start parameters estimation for CGGP graphs: 500 samples
+Estimated end of computation: 08-Nov-2017 18:01:33 (0.0 hours)
+|---------------------------------|
+|*********************************|
+End parameters estimation for CGGP graphs
+Computation time: 0.0 hours
+-----------------------------------
+</pre><h2>Some plots<a name="5"></a></h2><pre class="codeinput"><span class="comment">% Identify each feature as liberal or conservative using ground truth</span>
+<span class="comment">% (This step would normally require a human interpretation of the features)</span>
+[~, ind_features] = sort(median(community_affiliation(meta.isright,:), 1)./median(community_affiliation, 1));
+featnames = {<span class="string">'Liberal'</span>, <span class="string">'Conservative'</span>}; <span class="comment">% Name of the interpreted features</span>
+
+<span class="comment">% Print classification performance with ground truth</span>
+[confmat] = print_classif(fullfile(<span class="string">'./'</span>, [<span class="string">'classif_'</span> num2str(p) <span class="string">'f.txt'</span>]), <span class="keyword">...</span>
+    community_detection, meta.groups, ind_features, label_groups);
+</pre><pre class="codeoutput">Classification performance
+==========================
+Confusion matrix (counts)
+-------------------------
+Group        : Feat 1 Feat 2 | Total
+Left         :    543     45 |   588
+Right        :     23    613 |   636
+Total        :    566    658 |  1224
+-------------------------
+Confusion matrix (%)
+-------------------------
+Group        : Feat 1 Feat 2 | Total
+Left         :  44.36   3.68 | 48.04
+Right        :   1.88  50.08 | 51.96
+Total        :  46.24  53.76 |100.00
+-------------------------
+Group assignments of features
+-------------------------
+Feat 1: Left
+Feat 2: Right
+-------------------------
+Accuracy = 94.44
+Error = 5.56
+==========================
+</pre><pre class="codeinput"><span class="comment">% Plot levels of affiliation to each community for a subset of blogs</span>
+color = [0 0 .8; .8 0 0];
+names = {<span class="string">'blogsforbush.com'</span>
+    <span class="string">'instapundit.com'</span>
+    <span class="string">'drudgereport.com'</span>
+    <span class="string">'tagorda.com'</span>
+    <span class="string">'danieldrezner.com/blog'</span>
+    <span class="string">'andrewsullivan.com'</span>
+    <span class="string">'iwantmycountryback.org'</span>
+    <span class="string">'democraticunderground.com'</span>
+    <span class="string">'wonkette.com'</span>
+    <span class="string">'washingtonmonthly.com'</span>
+    <span class="string">'dailykos.com'</span>
+    <span class="string">'atrios.blogspot.com'</span>};
+ind = zeros(size(names,1),1);
+lab = cell(size(names,1), 1);
+<span class="keyword">for</span> i=1:size(names,1)
+    ind(i) = find(strcmp(meta.name, names{i}) &amp; strcmp(meta.name, names{i,1}));
+    lab{i} = sprintf(<span class="string">'%s (%s)'</span>, names{i}, label_groups{meta.groups(ind(i))}(1));
+<span class="keyword">end</span>
+plot_nodesfeatures(community_affiliation, ind, ind_features, lab, featnames, color);
+</pre><img vspace="5" hspace="5" src="demo_overlappingcommunity_03.png" alt=""> <pre class="codeinput"><span class="comment">% Plot the graph by clustering the nodes by community with maximum level of affiliation to see block structure</span>
+plot_sortedgraph(G, community_detection, community_detection, ind_features, labels);
+</pre><img vspace="5" hspace="5" src="demo_overlappingcommunity_04.png" alt=""> <img vspace="5" hspace="5" src="demo_overlappingcommunity_05.png" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Sparse Networks with Overlapping Communities (SNOC) package: demo_overlappingcommunity
+%
+% This Matlab script finds overlapping communities in a network of
+% political blogs, using the wrapper function
+% overlapping_community_detection.m. For a full analysis of this dataset,
+% see the Matlab demo demo_polblogs.m.
+%
+% For downloading the package and information on installation, visit the
+% <https://github.com/misxenia/SNOC SNOC webpage>.
+% 
+% Reference: 
+%
+% * A. Todeschini, X. Miscouridou and F. Caron (2017) <https://arxiv.org/abs/1602.02114 Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities>. arXiv:1602.02114.
+%
+% Authors: 
+%
+% * <http://adrien.tspace.fr/ A. Todeschini>, Inria
+% * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
+% * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
+% 
+% Tested on Matlab R2016a. Requires the statistics toolbox.
+%
+% Last Modified: 07/11/2017
+%%
+
+close all
+clear all
+
+% Add path
+addpath ./GGP/ ./CGGP/ ./utils/
+
+%% Load network of political blogs
+% Data can be downloaded from
+% <https://www.cise.ufl.edu/research/sparse/mat/Newman/polblogs.mat here>.
+
+load ./data/polblogs/polblogs.mat
+
+titlenetwork = 'Political blogosphere Feb. 2005';
+name = 'polblogs';
+labels = {'Blogs', 'Blogs'};
+groupfield = 'name'; % meta field displayed for group plot
+
+% Transform the graph to obtain a simple graph
+G = Problem.A | Problem.A'; % make undirected graph
+G = logical(G-diag(diag(G))); % remove self edges (#3)
+
+% Collect metadata
+meta.name = cellstr(Problem.aux.nodename);
+meta.source = cellstr(Problem.aux.nodesource);
+meta.isright = logical(Problem.aux.nodevalue);
+meta.degree = num2cell(full(sum(G,2)));
+meta.groups = zeros(size(meta.isright));
+meta.groups(~meta.isright) = 1;
+meta.groups(meta.isright) = 2;
+color_groups = [0 0 .8; .8 0 0];
+label_groups = {'Left', 'Right'};
+fn = fieldnames(meta);
+
+% Remove nodes with no edge (#266)
+ind = any(G);
+G = G(ind, ind);
+for i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+end
+
+% Plot adjacency matrix (sorted)
+figure('name', 'Adjacency matrix (sorted by ground truth political leaning)')
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+
+%%
+
+% Shuffle nodes: irrelevant due to exchangeability, just to check we do not cheat!
+ind = randperm(size(G,1));
+G = G(ind, ind);
+for i=1:length(fn)
+    meta.(fn{i}) = meta.(fn{i})(ind);
+end
+
+% Plot adjacency matrix (unsorted)
+figure('name', 'Adjacency matrix (unsorted)')
+spy(G);
+xlabel(labels{2})
+ylabel(labels{1})
+
+%% Find overlapping communities
+%
+
+p = 2; % Number of communities
+niter = 20000; % Number of iterations
+[degree_correction, community_affiliation, community_detection] = overlapping_community_detection(G, p, niter);
+
+
+%% Some plots
+%
+
+% Identify each feature as liberal or conservative using ground truth 
+% (This step would normally require a human interpretation of the features)
+[~, ind_features] = sort(median(community_affiliation(meta.isright,:), 1)./median(community_affiliation, 1));
+featnames = {'Liberal', 'Conservative'}; % Name of the interpreted features
+
+% Print classification performance with ground truth
+[confmat] = print_classif(fullfile('./', ['classif_' num2str(p) 'f.txt']), ...
+    community_detection, meta.groups, ind_features, label_groups);
+
+
+%%
+
+% Plot levels of affiliation to each community for a subset of blogs
+color = [0 0 .8; .8 0 0];
+names = {'blogsforbush.com'
+    'instapundit.com'
+    'drudgereport.com'
+    'tagorda.com'
+    'danieldrezner.com/blog'
+    'andrewsullivan.com'
+    'iwantmycountryback.org'
+    'democraticunderground.com'
+    'wonkette.com'
+    'washingtonmonthly.com'
+    'dailykos.com'
+    'atrios.blogspot.com'};
+ind = zeros(size(names,1),1);
+lab = cell(size(names,1), 1);
+for i=1:size(names,1)
+    ind(i) = find(strcmp(meta.name, names{i}) & strcmp(meta.name, names{i,1}));
+    lab{i} = sprintf('%s (%s)', names{i}, label_groups{meta.groups(ind(i))}(1));
+end
+plot_nodesfeatures(community_affiliation, ind, ind_features, lab, featnames, color);
+
+%%
+
+% Plot the graph by clustering the nodes by community with maximum level of affiliation to see block structure
+plot_sortedgraph(G, community_detection, community_detection, ind_features, labels);
+##### SOURCE END #####
+--></body></html>

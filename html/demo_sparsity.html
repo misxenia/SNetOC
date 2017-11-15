@@ -1,0 +1,681 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>Sparse Networks with Overlapping Communities (SNetOC) package: demo_sparsity</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-11-08"><meta name="DC.source" content="demo_sparsity.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>Sparse Networks with Overlapping Communities (SNetOC) package: demo_sparsity</h1><!--introduction--><p>This Matlab script shows empirically the sparsity properties of a range of graph models.</p><p>For downloading the package and information on installation, visit the <a href="https://github.com/misxenia/SNetOC">SNetOCC webpage</a>.</p><p>Reference:</p><div><ul><li>A. Todeschini, X. Miscouridou and F. Caron (2017) <a href="https://arxiv.org/abs/1602.02114">Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities</a>. arXiv:1602.02114.</li></ul></div><p>Authors:</p><div><ul><li><a href="http://adrien.tspace.fr/">A. Todeschini</a>, Inria</li><li><a href="http://csml.stats.ox.ac.uk/people/miscouridou/">X. Miscouridou</a>, University of Oxford</li><li><a href="http://www.stats.ox.ac.uk/~caron/">F. Caron</a>, University of Oxford</li></ul></div><p>Tested on Matlab R2016a. Requires the Statistics toolbox.</p><p>Last Modified: 10/10/2017</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">General settings</a></li><li><a href="#2">Definition of the graph models</a></li><li><a href="#3">Sample graphs of various sizes</a></li><li><a href="#4">Some plots</a></li><li><a href="#7">Save workspace</a></li></ul></div><h2>General settings<a name="1"></a></h2><pre class="codeinput">clear
+close <span class="string">all</span>
+
+<span class="comment">% Add paths</span>
+addpath <span class="string">./GGP/</span> <span class="string">./CGGP/</span> <span class="string">./utils/</span>
+
+<span class="comment">% Save plots and workspace</span>
+saveplots = false;
+saveworkspace = true;
+
+root = <span class="string">'.'</span>;
+outpath = fullfile(root, <span class="string">'results'</span>, <span class="string">'demo_sparsity'</span>, date);
+
+<span class="keyword">if</span> (saveplots || saveworkspace) &amp;&amp; ~isdir(outpath)
+    mkdir(outpath)
+<span class="keyword">end</span>
+
+<span class="comment">% Set the seed</span>
+rng <span class="string">default</span>
+</pre><h2>Definition of the graph models<a name="2"></a></h2><pre class="codeinput">p = 2; alpha = 100; tau = 1;
+gamma = zeros(p,1);
+a = .2;
+b = 1/p;
+Fdist.name = <span class="string">'gamma'</span>;
+Fdist.param.a = a;
+Fdist.param.b = b;
+typegraph = <span class="string">'undirected'</span>;
+observe_all = false;
+ntrials = 500;
+nsamples = 1;
+imod = 0;
+
+<span class="comment">% CGGP (sigma=-0.5)</span>
+imod = imod+1;
+sigma = -0.5;
+obj{imod} = graphmodel(<span class="string">'CGGP'</span>, p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = <span class="string">'alpha'</span>;
+trial{imod} = linspace(1, 1500, ntrials);
+optionrnd{imod} = 1e-10;
+<span class="comment">% CGGP (sigma=0.2)</span>
+imod = imod+1;
+sigma = 0.2;
+obj{imod} = graphmodel(<span class="string">'CGGP'</span>, p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = <span class="string">'alpha'</span>;
+trial{imod} = linspace(1, 600, ntrials);
+optionrnd{imod} = 1e-10;
+<span class="comment">% CGGP (sigma=0.5)</span>
+imod = imod+1;
+sigma = 0.5;
+obj{imod} = graphmodel(<span class="string">'CGGP'</span>, p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = <span class="string">'alpha'</span>;
+trial{imod} = linspace(1, 300, ntrials);
+optionrnd{imod} = 1e-5;
+<span class="comment">% CGGP (sigma=0.8)</span>
+imod = imod+1;
+sigma = 0.8;
+obj{imod} = graphmodel(<span class="string">'CGGP'</span>, p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = <span class="string">'alpha'</span>;
+trial{imod} = linspace(1, 300, ntrials);
+optionrnd{imod} = 1e-4;
+
+edgebins = 2.^(0:1:12);
+sizebins = edgebins(2:end) - edgebins(1:end-1);
+sizebins(end+1) = 1;
+</pre><h2>Sample graphs of various sizes<a name="3"></a></h2><pre class="codeinput"><span class="keyword">for</span> k=1:numel(obj) <span class="comment">% For different models</span>
+    fprintf(<span class="string">'--- Model %d/%d: %s ---\n'</span>, k, numel(obj), obj{k}.name)
+    <span class="keyword">for</span> i=1:numel(trial{k}) <span class="comment">% Varying number of nodes</span>
+        <span class="keyword">if</span> rem(i, 10)==0
+            fprintf(<span class="string">'Trial %d/%d \n'</span>, i, numel(trial{k}));
+        <span class="keyword">end</span>
+        obj{k}.param.(field{k}) = trial{k}(i);
+        <span class="keyword">for</span> j=1:nsamples <span class="comment">% For different samples</span>
+            G = graphrnd(obj{k}, optionrnd{k}); <span class="comment">% Sample the graph</span>
+            degreefreq{k}(i,j,:) = zeros(numel(edgebins), 1);
+            <span class="keyword">if</span> size(G, 1)&gt;0
+                degreefreq{k}(i,j,:) = histc(full(sum(G)),edgebins)./sizebins/size(G, 1);
+            <span class="keyword">end</span>
+            nbnodes{k}(i,j) = size(G, 1);
+            nbedges{k}(i,j) = sum(G(:))/2 + trace(G)/2;
+            maxdegree{k}(i,j) = max(sum(G));
+            degreeone{k}(i,j) = sum(sum(G)==1);
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">--- Model 1/4: Compound generalized gamma process ---
+Trial 10/500 
+Trial 20/500 
+Trial 30/500 
+Trial 40/500 
+Trial 50/500 
+Trial 60/500 
+Trial 70/500 
+Trial 80/500 
+Trial 90/500 
+Trial 100/500 
+Trial 110/500 
+Trial 120/500 
+Trial 130/500 
+Trial 140/500 
+Trial 150/500 
+Trial 160/500 
+Trial 170/500 
+Trial 180/500 
+Trial 190/500 
+Trial 200/500 
+Trial 210/500 
+Trial 220/500 
+Trial 230/500 
+Trial 240/500 
+Trial 250/500 
+Trial 260/500 
+Trial 270/500 
+Trial 280/500 
+Trial 290/500 
+Trial 300/500 
+Trial 310/500 
+Trial 320/500 
+Trial 330/500 
+Trial 340/500 
+Trial 350/500 
+Trial 360/500 
+Trial 370/500 
+Trial 380/500 
+Trial 390/500 
+Trial 400/500 
+Trial 410/500 
+Trial 420/500 
+Trial 430/500 
+Trial 440/500 
+Trial 450/500 
+Trial 460/500 
+Trial 470/500 
+Trial 480/500 
+Trial 490/500 
+Trial 500/500 
+--- Model 2/4: Compound generalized gamma process ---
+Trial 10/500 
+Trial 20/500 
+Trial 30/500 
+Trial 40/500 
+Trial 50/500 
+Trial 60/500 
+Trial 70/500 
+Trial 80/500 
+Trial 90/500 
+Trial 100/500 
+Trial 110/500 
+Trial 120/500 
+Trial 130/500 
+Trial 140/500 
+Trial 150/500 
+Trial 160/500 
+Trial 170/500 
+Trial 180/500 
+Trial 190/500 
+Trial 200/500 
+Trial 210/500 
+Trial 220/500 
+Trial 230/500 
+Trial 240/500 
+Trial 250/500 
+Trial 260/500 
+Trial 270/500 
+Trial 280/500 
+Trial 290/500 
+Trial 300/500 
+Trial 310/500 
+Trial 320/500 
+Trial 330/500 
+Trial 340/500 
+Trial 350/500 
+Trial 360/500 
+Trial 370/500 
+Trial 380/500 
+Trial 390/500 
+Trial 400/500 
+Trial 410/500 
+Trial 420/500 
+Trial 430/500 
+Trial 440/500 
+Trial 450/500 
+Trial 460/500 
+Trial 470/500 
+Trial 480/500 
+Trial 490/500 
+Trial 500/500 
+--- Model 3/4: Compound generalized gamma process ---
+Trial 10/500 
+Trial 20/500 
+Trial 30/500 
+Trial 40/500 
+Trial 50/500 
+Trial 60/500 
+Trial 70/500 
+Trial 80/500 
+Trial 90/500 
+Trial 100/500 
+Trial 110/500 
+Trial 120/500 
+Trial 130/500 
+Trial 140/500 
+Trial 150/500 
+Trial 160/500 
+Trial 170/500 
+Trial 180/500 
+Trial 190/500 
+Trial 200/500 
+Trial 210/500 
+Trial 220/500 
+Trial 230/500 
+Trial 240/500 
+Trial 250/500 
+Trial 260/500 
+Trial 270/500 
+Trial 280/500 
+Trial 290/500 
+Trial 300/500 
+Trial 310/500 
+Trial 320/500 
+Trial 330/500 
+Trial 340/500 
+Trial 350/500 
+Trial 360/500 
+Trial 370/500 
+Trial 380/500 
+Trial 390/500 
+Trial 400/500 
+Trial 410/500 
+Trial 420/500 
+Trial 430/500 
+Trial 440/500 
+Trial 450/500 
+Trial 460/500 
+Trial 470/500 
+Trial 480/500 
+Trial 490/500 
+Trial 500/500 
+--- Model 4/4: Compound generalized gamma process ---
+Trial 10/500 
+Trial 20/500 
+Trial 30/500 
+Trial 40/500 
+Trial 50/500 
+Trial 60/500 
+Trial 70/500 
+Trial 80/500 
+Trial 90/500 
+Trial 100/500 
+Trial 110/500 
+Trial 120/500 
+Trial 130/500 
+Trial 140/500 
+Trial 150/500 
+Trial 160/500 
+Trial 170/500 
+Trial 180/500 
+Trial 190/500 
+Trial 200/500 
+Trial 210/500 
+Trial 220/500 
+Trial 230/500 
+Trial 240/500 
+Trial 250/500 
+Trial 260/500 
+Trial 270/500 
+Trial 280/500 
+Trial 290/500 
+Trial 300/500 
+Trial 310/500 
+Trial 320/500 
+Trial 330/500 
+Trial 340/500 
+Trial 350/500 
+Trial 360/500 
+Trial 370/500 
+Trial 380/500 
+Trial 390/500 
+Trial 400/500 
+Trial 410/500 
+Trial 420/500 
+Trial 430/500 
+Trial 440/500 
+Trial 450/500 
+Trial 460/500 
+Trial 470/500 
+Trial 480/500 
+Trial 490/500 
+Trial 500/500 
+</pre><h2>Some plots<a name="4"></a></h2><pre class="codeinput"><span class="comment">% Properties of the plots</span>
+fontsize = 22;
+plotstyles = {<span class="string">'--+'</span>,<span class="string">':s'</span>,<span class="string">':d'</span>,<span class="string">':o'</span>};
+colors = lines;
+<span class="keyword">for</span> k=1:numel(obj)
+    leg{k} = sprintf(<span class="string">'\\sigma = %g'</span>, obj{k}.param.sigma);
+<span class="keyword">end</span>
+set(0,<span class="string">'DefaultAxesFontSize'</span>, 16)
+set(0,<span class="string">'DefaultTextFontSize'</span>, fontsize)
+set(0,<span class="string">'DefaultLineLineWidth'</span>, 2)
+set(0,<span class="string">'DefaultLineMarkerSize'</span>, 8)
+close
+
+<span class="comment">% Degree distribution loglog plot</span>
+figure(<span class="string">'name'</span>, <span class="string">'degreeloglog'</span>)
+<span class="keyword">for</span> k=1:numel(obj)
+    h = loglog(edgebins, squeeze(mean(mean(degreefreq{k}, 1), 2)), plotstyles{k});
+    set(h, <span class="string">'markerfacecolor'</span>, colors(k,:), <span class="string">'color'</span>, colors(k,:));
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+axis <span class="string">tight</span>
+<span class="comment">% xlim([1, 300])</span>
+<span class="comment">% ylim([10, 20000])</span>
+xlabel(<span class="string">'Degree'</span>, <span class="string">'fontsize'</span>, fontsize)
+ylabel(<span class="string">'Distribution'</span>, <span class="string">'fontsize'</span>, fontsize)
+legend(leg, <span class="string">'fontsize'</span>, fontsize, <span class="string">'location'</span>, <span class="string">'southwest'</span>)
+legend <span class="string">boxoff</span>
+box <span class="string">off</span>
+<span class="keyword">if</span> saveplots
+    savefigs(gcf, <span class="string">'degree'</span>, outpath);
+<span class="keyword">end</span>
+
+
+
+<span class="comment">% Nb of Edges vs nb of nodes on loglog plot</span>
+step = .4;
+figure(<span class="string">'name'</span>, <span class="string">'edgesvsnodesloglog'</span>);
+<span class="keyword">for</span> k=1:numel(obj)
+    h = plot_loglog(nbnodes{k}(:), nbedges{k}(:), plotstyles{k}, step);
+    set(h, <span class="string">'markerfacecolor'</span>, colors(k,:), <span class="string">'color'</span>, colors(k,:));
+    hold <span class="string">on</span>
+<span class="keyword">end</span>
+axis <span class="string">tight</span>
+xlim([25, 3000])
+<span class="comment">% ylim([10, 20000])</span>
+xlabel(<span class="string">'Number of nodes'</span>, <span class="string">'fontsize'</span>, fontsize)
+ylabel(<span class="string">'Number of edges'</span>, <span class="string">'fontsize'</span>, fontsize)
+legend(leg, <span class="string">'fontsize'</span>, fontsize, <span class="string">'location'</span>, <span class="string">'northwest'</span>)
+legend <span class="string">boxoff</span>
+box <span class="string">off</span>
+<span class="keyword">if</span> saveplots
+    savefigs(gcf, <span class="string">'edgesvsnodes'</span>, outpath);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="demo_sparsity_01.png" alt=""> <img vspace="5" hspace="5" src="demo_sparsity_02.png" alt=""> <pre class="codeinput"><span class="comment">% Nb of Edges/Nb of nodes squared vs nb of nodes on loglog plot</span>
+step = 1;
+figure(<span class="string">'name'</span>, <span class="string">'edgesvsnodesloglog'</span>)
+<span class="keyword">for</span> k=1:numel(obj)
+    ind = nbnodes{k}(:)&gt;0;
+    h = plot_loglog(nbnodes{k}(ind), nbedges{k}(ind)./nbnodes{k}(ind).^2, plotstyles{k}, step);
+    set(h, <span class="string">'markerfacecolor'</span>, colors(k,:), <span class="string">'color'</span>, colors(k,:));
+hold <span class="string">on</span>
+<span class="keyword">end</span>
+axis <span class="string">tight</span>
+xlim([10, 2000])
+xlabel(<span class="string">'Number of nodes'</span>, <span class="string">'fontsize'</span>, fontsize)
+ylabel(<span class="string">'Nb of edges / (Nb of nodes)^2'</span>, <span class="string">'fontsize'</span>, fontsize)
+legend(leg,<span class="string">'fontsize'</span>, fontsize, <span class="string">'location'</span>, <span class="string">'southwest'</span>)
+legend <span class="string">boxoff</span>
+box <span class="string">off</span>
+<span class="keyword">if</span> saveplots
+    savefigs(gcf, <span class="string">'edgesvsnodes2'</span>, outpath);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="demo_sparsity_03.png" alt=""> <pre class="codeinput"><span class="comment">% Nb of nodes of degree one versus number of nodes</span>
+figure(<span class="string">'name'</span>, <span class="string">'degonevsnodes'</span>);
+<span class="keyword">for</span> k=1:numel(obj)
+    h = plot_loglog(nbnodes{k}(:), degreeone{k}(:), plotstyles{k}, step);
+    set(h, <span class="string">'markerfacecolor'</span>, colors(k,:), <span class="string">'color'</span>, colors(k,:));
+hold <span class="string">on</span>
+<span class="keyword">end</span>
+axis <span class="string">tight</span>
+xlim([10, 2000])
+<span class="comment">% ylim([1, 2000])</span>
+xlabel(<span class="string">'Number of nodes'</span>, <span class="string">'fontsize'</span>, fontsize);
+ylabel(<span class="string">'Number of nodes of degree one'</span>, <span class="string">'fontsize'</span>, fontsize);
+legend(leg,<span class="string">'fontsize'</span>, fontsize, <span class="string">'location'</span>, <span class="string">'northwest'</span>);
+legend(<span class="string">'boxoff'</span>);
+legend <span class="string">boxoff</span>
+box <span class="string">off</span>
+<span class="keyword">if</span> saveplots
+    savefigs(gcf, <span class="string">'degreeonevsnodes'</span>, outpath);
+<span class="keyword">end</span>
+</pre><img vspace="5" hspace="5" src="demo_sparsity_04.png" alt=""> <h2>Save workspace<a name="7"></a></h2><pre class="codeinput"><span class="keyword">if</span> saveworkspace
+    save(fullfile(outpath, <span class="string">'workspace'</span>));
+<span class="keyword">end</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% Sparse Networks with Overlapping Communities (SNetOC) package: demo_sparsity
+%
+% This Matlab script shows empirically the sparsity properties of a range of graph models.
+%
+% For downloading the package and information on installation, visit the
+% <https://github.com/misxenia/SNetOC SNetOCC webpage>.
+% 
+% Reference: 
+%
+% * A. Todeschini, X. Miscouridou and F. Caron (2017) <https://arxiv.org/abs/1602.02114 Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities>. arXiv:1602.02114.
+%
+% Authors: 
+%
+% * <http://adrien.tspace.fr/ A. Todeschini>, Inria
+% * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
+% * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
+% 
+% Tested on Matlab R2016a. Requires the Statistics toolbox.
+%
+% Last Modified: 10/10/2017
+%%
+
+%% General settings
+%
+
+clear
+close all
+
+% Add paths
+addpath ./GGP/ ./CGGP/ ./utils/ 
+
+% Save plots and workspace
+saveplots = false;
+saveworkspace = true;
+
+root = '.';
+outpath = fullfile(root, 'results', 'demo_sparsity', date);
+
+if (saveplots || saveworkspace) && ~isdir(outpath)
+    mkdir(outpath)
+end
+
+% Set the seed
+rng default
+
+%% Definition of the graph models
+% 
+
+p = 2; alpha = 100; tau = 1;
+gamma = zeros(p,1);
+a = .2;
+b = 1/p;
+Fdist.name = 'gamma';
+Fdist.param.a = a;
+Fdist.param.b = b;
+typegraph = 'undirected';
+observe_all = false;
+ntrials = 500;
+nsamples = 1;
+imod = 0;
+
+% CGGP (sigma=-0.5)
+imod = imod+1;
+sigma = -0.5;
+obj{imod} = graphmodel('CGGP', p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = 'alpha';
+trial{imod} = linspace(1, 1500, ntrials);
+optionrnd{imod} = 1e-10;
+% CGGP (sigma=0.2)
+imod = imod+1;
+sigma = 0.2;
+obj{imod} = graphmodel('CGGP', p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = 'alpha';
+trial{imod} = linspace(1, 600, ntrials);
+optionrnd{imod} = 1e-10;
+% CGGP (sigma=0.5)
+imod = imod+1;
+sigma = 0.5;
+obj{imod} = graphmodel('CGGP', p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = 'alpha';
+trial{imod} = linspace(1, 300, ntrials);
+optionrnd{imod} = 1e-5;
+% CGGP (sigma=0.8)
+imod = imod+1;
+sigma = 0.8;
+obj{imod} = graphmodel('CGGP', p, alpha, sigma, tau, Fdist, gamma, typegraph, observe_all);
+field{imod} = 'alpha';
+trial{imod} = linspace(1, 300, ntrials);
+optionrnd{imod} = 1e-4;
+
+edgebins = 2.^(0:1:12);
+sizebins = edgebins(2:end) - edgebins(1:end-1);
+sizebins(end+1) = 1;
+
+%% Sample graphs of various sizes
+%
+
+for k=1:numel(obj) % For different models
+    fprintf('REPLACE_WITH_DASH_DASH- Model %d/%d: %s REPLACE_WITH_DASH_DASH-\n', k, numel(obj), obj{k}.name)    
+    for i=1:numel(trial{k}) % Varying number of nodes
+        if rem(i, 10)==0
+            fprintf('Trial %d/%d \n', i, numel(trial{k}));
+        end
+        obj{k}.param.(field{k}) = trial{k}(i);
+        for j=1:nsamples % For different samples
+            G = graphrnd(obj{k}, optionrnd{k}); % Sample the graph
+            degreefreq{k}(i,j,:) = zeros(numel(edgebins), 1);
+            if size(G, 1)>0
+                degreefreq{k}(i,j,:) = histc(full(sum(G)),edgebins)./sizebins/size(G, 1);
+            end
+            nbnodes{k}(i,j) = size(G, 1);
+            nbedges{k}(i,j) = sum(G(:))/2 + trace(G)/2;
+            maxdegree{k}(i,j) = max(sum(G));
+            degreeone{k}(i,j) = sum(sum(G)==1);
+        end
+    end
+end
+
+%% Some plots
+%
+
+% Properties of the plots
+fontsize = 22;
+plotstyles = {'REPLACE_WITH_DASH_DASH+',':s',':d',':o'};
+colors = lines;
+for k=1:numel(obj)
+    leg{k} = sprintf('\\sigma = %g', obj{k}.param.sigma);
+end
+set(0,'DefaultAxesFontSize', 16)
+set(0,'DefaultTextFontSize', fontsize)
+set(0,'DefaultLineLineWidth', 2)
+set(0,'DefaultLineMarkerSize', 8)
+close 
+
+% Degree distribution loglog plot
+figure('name', 'degreeloglog')
+for k=1:numel(obj)
+    h = loglog(edgebins, squeeze(mean(mean(degreefreq{k}, 1), 2)), plotstyles{k});
+    set(h, 'markerfacecolor', colors(k,:), 'color', colors(k,:));
+    hold on
+end
+axis tight
+% xlim([1, 300])
+% ylim([10, 20000])
+xlabel('Degree', 'fontsize', fontsize)
+ylabel('Distribution', 'fontsize', fontsize)
+legend(leg, 'fontsize', fontsize, 'location', 'southwest')
+legend boxoff
+box off
+if saveplots
+    savefigs(gcf, 'degree', outpath);
+end
+
+
+
+% Nb of Edges vs nb of nodes on loglog plot 
+step = .4;
+figure('name', 'edgesvsnodesloglog');
+for k=1:numel(obj)
+    h = plot_loglog(nbnodes{k}(:), nbedges{k}(:), plotstyles{k}, step);
+    set(h, 'markerfacecolor', colors(k,:), 'color', colors(k,:));
+    hold on
+end
+axis tight
+xlim([25, 3000])
+% ylim([10, 20000])
+xlabel('Number of nodes', 'fontsize', fontsize)
+ylabel('Number of edges', 'fontsize', fontsize)
+legend(leg, 'fontsize', fontsize, 'location', 'northwest')
+legend boxoff
+box off
+if saveplots
+    savefigs(gcf, 'edgesvsnodes', outpath);
+end
+
+%%
+%
+
+% Nb of Edges/Nb of nodes squared vs nb of nodes on loglog plot 
+step = 1;
+figure('name', 'edgesvsnodesloglog')
+for k=1:numel(obj)
+    ind = nbnodes{k}(:)>0;
+    h = plot_loglog(nbnodes{k}(ind), nbedges{k}(ind)./nbnodes{k}(ind).^2, plotstyles{k}, step);
+    set(h, 'markerfacecolor', colors(k,:), 'color', colors(k,:));
+hold on
+end
+axis tight
+xlim([10, 2000])
+xlabel('Number of nodes', 'fontsize', fontsize)
+ylabel('Nb of edges / (Nb of nodes)^2', 'fontsize', fontsize)
+legend(leg,'fontsize', fontsize, 'location', 'southwest')
+legend boxoff
+box off
+if saveplots
+    savefigs(gcf, 'edgesvsnodes2', outpath);
+end
+
+%%
+%
+
+% Nb of nodes of degree one versus number of nodes
+figure('name', 'degonevsnodes');
+for k=1:numel(obj)
+    h = plot_loglog(nbnodes{k}(:), degreeone{k}(:), plotstyles{k}, step);
+    set(h, 'markerfacecolor', colors(k,:), 'color', colors(k,:));
+hold on
+end
+axis tight
+xlim([10, 2000])
+% ylim([1, 2000])
+xlabel('Number of nodes', 'fontsize', fontsize);
+ylabel('Number of nodes of degree one', 'fontsize', fontsize);
+legend(leg,'fontsize', fontsize, 'location', 'northwest');
+legend('boxoff');
+legend boxoff
+box off
+if saveplots
+    savefigs(gcf, 'degreeonevsnodes', outpath);
+end
+
+%% Save workspace
+%
+if saveworkspace
+    save(fullfile(outpath, 'workspace'));
+end
+
+##### SOURCE END #####
+--></body></html>
