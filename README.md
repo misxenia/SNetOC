@@ -2,8 +2,8 @@
 
 Matlab package for Sparse and modular Networks with Overlapping Communities (SNetOC)
 
-- Version: [v0.1.0](https://github.com/misxenia/SNetOC/releases/tag/v0.1.0)
-- Last modified: 2017-11-08
+- Version: [v1.0](https://github.com/misxenia/SNetOC/releases/tag/v1.0)
+- Last modified: 2017-11-16
 - URL: <https://github.com/misxenia/SNetOC>
 
 [**Download the package**](https://github.com/misxenia/SNetOC/archive/master.zip)
@@ -40,15 +40,15 @@ to be added to the Matlab path, using the command `addpath` (see the test file).
 
 ### Demos and reproducible results of the article [Todeschini, Miscouridou and Caron (2017)](https://arxiv.org/abs/1602.02114)
 
-- `demo_sparsity.m`: shows empirically the sparsity properties of a range of graph models. (see <https://github.com/misxenia/SNetOC/html/demo_sparsity.html>)
+- `demo_sparsity.m`: shows empirically the sparsity properties of a range of graph models. (see <https://misxenia.github.io/SNetOC/demo_sparsity.html>)
 
 You can run multiple MCMC chains in parallel by calling the `parpool` command 
 before running the following scripts. This requires the Parallel Computing Toolbox.
 
-- `demo_simulations.m`: posterior inference on a simulated graph under the CCRM model. (see <https://github.com/misxenia/SNetOC/html/demo_simulations.html>)
-- `demo_polblogs.m`: posterior inference on the polblogs graph under the CCRM model. (see <https://github.com/misxenia/SNetOC/html/demo_polblogs.html>)
-- `demo_usairport.m`: posterior inference on the USairport graph under the CCRM model. (see <https://github.com/misxenia/SNetOC/html/demo_usairport.html>)
-- `demo_overlappingcommunity.m`: posterior inference on a simulated graph from the CCRM model. (see <https://github.com/misxenia/SNetOC/html/demo_overlappingcommunity.html>)
+- `demo_simulations.m`: posterior inference on a simulated graph under the CCRM model. (see <https://misxenia.github.io/SNetOC/demo_simulations.html>)
+- `demo_polblogs.m`: posterior inference on the polblogs graph under the CCRM model. (see <https://misxenia.github.io/SNetOC/demo_polblogs.html>)
+- `demo_usairport.m`: posterior inference on the USairport graph under the CCRM model. (see <https://misxenia.github.io/SNetOC/demo_usairport.html>)
+- `demo_overlappingcommunity.m`: posterior inference on a simulated graph from the CCRM model. (see <https://misxenia.github.io/SNetOC/demo_overlappingcommunity.html>)
 - `MMSB_polblogs.m`: posterior inference on the polblogs graph the mixed membership stochastic blockmodel.
 - `MMSB_usairport.m`: posterior inference on the USairport graph the mixed membership stochastic blockmodel.
 
@@ -63,7 +63,7 @@ before running the following scripts. This requires the Parallel Computing Toolb
 
 # Changes
 
-### [v0.1.0](https://github.com/misxenia/SNetOC/releases/tag/v0.1.0) (2017-10-16)
+### [v1.0](https://github.com/misxenia/SNetOC/releases/tag/v1.0) (2017-11-16)
 
 - First release of the package.
 
