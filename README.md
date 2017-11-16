@@ -13,9 +13,8 @@ Matlab package for Sparse and modular Networks with Overlapping Communities (SNe
 This Matlab package implements algorithms for simulation and posterior inference 
 with the class of sparse graph models with overlapping community structure introduced by 
 [Todeschini, Miscouridou and Caron (2017)](https://arxiv.org/abs/1602.02114). 
-It allows to simulate graphs with a given level of sparsity and a deterministic number of communities.
-It also performs inference of the network parameters (sociability parameters associated to nodes (multivariate vectors)) 
-and to assess the sparsity of a given network.
+It allows to simulate graphs with a given level of sparsity and a fixed number of communities.
+It also performs inference of the network parameters (level of affiliation of each node to each community) and hyperparameters (sparsity of the network). 
 
 The package has been tested on **Matlab R2016a**, **R2017a** and **R2017b** and requires the Statistics Toolbox.
 
