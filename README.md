@@ -51,6 +51,7 @@ before running the following scripts. This requires the Parallel Computing Toolb
 - `demo_overlappingcommunity.m`: posterior inference on a simulated graph from the CCRM model. (see <https://misxenia.github.io/SNetOC/demo_overlappingcommunity.html>)
 - `MMSB_polblogs.m`: posterior inference on the polblogs graph the mixed membership stochastic blockmodel.
 - `MMSB_usairport.m`: posterior inference on the USairport graph the mixed membership stochastic blockmodel.
+- `MMSB_simulations.m`: posterior inference on a simulated graph under the mixed membership stochastic blockmodel.
 
 ### Main functions: simulation and posterior inference on graphs
 
