@@ -26,7 +26,7 @@ function objmcmc = graphmcmcsamples(objmcmc, G, verbose, init, varargin)
 % October 2017
 
 isparallel = false; 
-if ~isempty(ver('distcomp')) % Check if parallel toolbox installed
+if ~isempty(ver('parallel')) % Check if parallel toolbox installed
     if getpoolsize()>0 % If parallel pool initiated
         isparallel = true; % Will run MCMC chains in parallel using parallel computing toolbox
     end
