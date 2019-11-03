@@ -45,9 +45,9 @@ function sam = estimate_kernel_multi(train_data_forw, train_data_backw, BASE_2, 
     fprintf(' Starting the MCMC chains')
 
     if getpoolsize
-        parfor ( k=1:objmcmc.settings.nchains, getpoolsize() )
+        parfor k=1:objmcmc.settings.nchains
             rng(seed+k);
-           [sam(:,k), sta(:,k)] = HPmcmc_multi_edge(times, times_rec,precomputed_diff, objmodel, objmcmc);
+           [sam(:,k)] = HPmcmc_multi_edge(times, times_rec,precomputed_diff, objmodel, objmcmc);
         end
     else
         

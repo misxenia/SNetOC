@@ -83,7 +83,7 @@ if estimate_kernel
     num_events= [[K;K;K/2;K/2],[K;K;K/2;K/2]];
      N_e = size(train_data_forw,1);
         precomputed_diff = zeros(N_e,1) ;   
-        for edge=1:N_e;
+        for edge=1:N_e
             l=1; 
             indices = (train_data_backw(edge,:)<train_data_forw(edge,l));
             first_term = -(train_data_forw(edge, l) - sum(train_data_backw(edge,indices))) ;
@@ -115,9 +115,3 @@ if estimate_kernel
     plot(eta*ones(length(samples(1).eta),1))
     legend('eta')
 end
-
-
-
- 
-
-

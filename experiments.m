@@ -10,7 +10,7 @@
 clear all
 close all
 collegedata = true;
-istest = 1;
+istest = 0;
 addpath ./Hawkes ./CGGP ./GGP ./utils ./
 
 if  collegedata
@@ -100,7 +100,7 @@ if estimate_kernel
     N_e = size(train_data_forw,1);
     % precomputations
     precomputed_diff = zeros(N_e,1) ;   
-    for edge=1:N_e;
+    for edge=1:N_e
         l=1; 
         indices = (train_data_backw(edge,:)<train_data_forw(edge,l));
         first_term = -(train_data_forw(edge, l) - sum(train_data_backw(edge,indices))) ;      
