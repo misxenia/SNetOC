@@ -1,4 +1,4 @@
-function [h_trace] = plot_trace(samples, settings, variables, namesvar, trueval, rep, prefix, suffix)
+function [h_trace] = plot_trace(samples, settings, variables, namesvar, trueval, rep, prefix, suffix, leg, fontsize)
 % Plots the trace of the variables for the different MCMC chains
 %
 % INPUT
@@ -49,16 +49,22 @@ if nargin<8
 end
 
 [ntypes, nchains] = size(samples);
-leg = cell(nchains, 1);
-for k=1:nchains
-    leg{k} = ['Chain ' num2str(k)];
+if nargin<9
+    leg = cell(nchains, 1);
+    for k=1:nchains
+        leg{k} = ['Chain ' num2str(k)];
+    end
 end
 
+if nargin<10
+    fontsize=22;
+end
+nvar = numel(variables);
 
 %% Trace plots and posterior histograms for parameters
-h_trace = gobjects(ntypes, ntypes) ;
+h_trace = gobjects(ntypes, nvar);
 for t=1:ntypes% loop over types of nodes
-    for i=1:numel(variables)% loop over variables
+    for i=1:nvar% loop over variables
         var = strsplit(variables{i},'.');
         h_trace(t, i) = figure;
         for k=1:nchains
@@ -72,18 +78,18 @@ for t=1:ntypes% loop over types of nodes
         end
         if ~isempty(trueval)
             h_true = plot([thin; (niter-nburn)], [trueval{t,i}(:)'; trueval{t,i}(:)'], 'g--', 'linewidth', 3);
-            legend([h(:,1); h_true(1)], [leg; 'True'], 'fontsize', 16, 'location', 'Best');
-        else
-            legend(h(:,1), leg, 'fontsize', 16, 'location', 'Best');
+%             legend([h(:,1); h_true(1)], [leg; 'True'], 'fontsize', fontsize,'Interpreter','latex');
         end
+        legend(h(:,1), leg, 'fontsize', fontsize, 'Interpreter','latex');
         legend boxoff
-        xlabel('MCMC iterations', 'fontsize', 16);
-        ylabel(namesvar{t,i} , 'fontsize', 16, 'interpreter', 'latex');
+        xlabel('MCMC iterations', 'fontsize', fontsize,'Interpreter','latex');
+        ylabel(namesvar{t,i} , 'fontsize', fontsize, 'interpreter', 'latex');
         box off
+        axis tight
         xlim([0, niter-nburn])
         clear h;
         if ~isempty(rep)
-%            savefigs(gcf, [prefix 'trace_' var{end} num2str(t) suffix], rep);
+            savefigs(gcf, [prefix 'trace_' var{end} num2str(t) suffix], rep);
         end
     end
 end

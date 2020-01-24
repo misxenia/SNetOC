@@ -241,7 +241,7 @@ epsilon_all = zeros(niter, 1);
 for i = 1:niter
     % Update the counts using Gibbs or Metropolis-Hastings step
     if mod(i-1, nlatent)==0
-        S.m = update_m_graph(S.logw, ind1, ind2);
+        [S.m, S.n] = update_m_graph(S.logw, ind1, ind2);
     end
     
     % Update w using Hamiltonian Monte Carlo
@@ -350,5 +350,7 @@ else
 end
 samples.logalpha2(:, :, ind) = S.logalpha + S.sigma*log(S.tau);
 samples.Fparam.b2(:, :, ind) = S.Fdist.param.b*S.tau;
+samples.m(:, :, ind) = S.m;
+samples.n(:, :, ind) = S.n;
 end
 

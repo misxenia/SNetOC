@@ -1,5 +1,5 @@
 %% Update of the latent counts (Gibbs)
-function [m] = update_m_graph(logw, ind1, ind2)
+function [m,n] = update_m_graph(logw, ind1, ind2)
 
 % update_m_graph updates the latent counts correspondning to the unobserved connection
 % of each of the K nodes to each of the p communities 

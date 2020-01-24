@@ -54,7 +54,8 @@ switch Fdist.name
 end
 
 if abs(sigma)<1e-8 % gamma process
-    sigma = (sigma>0)*1e-8; %%%% truncate
+    error('**** Case sigma=0 not implemented yet ******')
+%     sigma = (sigma>=0)*1e-8; %%%% truncate
 end
 
 
@@ -64,7 +65,11 @@ if numel(a)==1 && isinf(a)
 end
 
 t_b = (t./b)';
-rho_fun = @(x) rho2(x, t_b, sigma, tau, a');
+if sigma<0
+    rho_fun = @(x) -(1-sigma)*rho_sigma_neg(x, t_b, sigma, tau, a');
+else
+    rho_fun = @(x) rho_sigma_pos2(x, t_b, sigma, tau, a');
+end
 out = exp(-gammaln(2-sigma))/sigma*integral(rho_fun, 0, Inf, varargin{:}) - tau^sigma/sigma;
 
 if imag(out)~=0 || out<0 || isnan(out)
@@ -73,8 +78,19 @@ end
 end
 
 
-% %% stable for all
-function out = rho(x, t_b, sigma, tau, a)
+% case sigma negative
+function out = rho_sigma_neg(x, t_b, sigma, tau, a)
+out =  exp( - x.*tau - sum(bsxfun(@times, a, log1p(t_b*x)), 1)  + (-sigma)*log(x)) .* (-tau +sum(bsxfun(@times, a.*t_b, (1+t_b*x).^(-1) ), 1));
+out_nan = isnan(out);
+x_pos = x>0;
+ind_naninf = x_pos & (out_nan | isinf(out));
+if any(ind_naninf)
+    keyboard
+end
+end
+
+% case sigma positive, with 1 integration by part (see NoteCianv2.pdf)
+function out = rho_sigma_pos(x, t_b, sigma, tau, a)
 out =  exp( - x.*tau - sum(bsxfun(@times, a, log1p(t_b*x)), 1)  + (-sigma)*log(x)) .* (tau +sum(bsxfun(@times, a.*t_b, (1+t_b*x).^(-1) ), 1));
 out_nan = isnan(out);
 x_pos = x>0;
@@ -84,7 +100,8 @@ if any(ind_naninf)
 end
 end
 
-function out = rho2(x, t_b, sigma, tau, a)
+% case sigma positive, with 2 integrations by part (see NoteCianv2.pdf)
+function out = rho_sigma_pos2(x, t_b, sigma, tau, a)
 
 out =  exp( - x.*tau - sum(bsxfun(@times, a, log1p(t_b*x)), 1)  + (1-sigma)*log(x))...
     .* ((tau +sum(bsxfun(@times, a.*t_b, (1+t_b*x).^(-1) ), 1)).^2  + sum(bsxfun(@times, a.*(t_b.^2), (1+t_b*x).^(-2) ), 1)  );

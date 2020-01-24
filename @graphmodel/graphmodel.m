@@ -102,11 +102,11 @@ classdef graphmodel
             %       If empty, gamma is fixed to zero.
             %     - observe_all: logical (default=false); if set to true,
             %     indicates that all nodes are observed, including nodes
-            %     with connection; necesarily in the sparse regime (\sigma<0)
+            %     without connection; necessarily in the dense regime (\sigma<0)
             %     - necessarily_sparse: logical (default=false)
             %       By default, sigma can take values in (-infty,1) and
             %       cover dense and sparse regime; if
-            %       necessarily_sparse=true, it forces the model to be sparse (1>sigma>0)
+            %       necessarily_sparse=true, it forces the model to be sparse (0<sigma<1)
             %   - If typegraph is bipartite:
             %     - alpha: cell of length 2.
             %       - alpha{1} corresponds to the parameter alpha of
@@ -286,7 +286,6 @@ classdef graphmodel
                         if numel(obj.param)==1
                             obj.param(2) = obj.param(1);
                         end
-                        numel(Fdist)
                         if numel(Fdist)==1
                             Fdist(2) = Fdist(1);
                         end

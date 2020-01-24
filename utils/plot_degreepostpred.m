@@ -1,5 +1,4 @@
-function [quantile_freq, quantile_freq2] = plot_degreepostpred(G, objmcmc, ndraws, T, rep, prefix, suffix, verbose)
-
+function [quantile_freq, quantile_freq2] = plot_degreepostpred(G, objmcmc, ndraws, T, rep, prefix, suffix, verbose, fontsize)
 % plot_degreepostpred   
 % 1) plots the degree distribution from the posterior predictive distribution
 %    either conditioning on the hyperparameters only (cond = false)or
@@ -48,6 +47,9 @@ if nargin<7
 end
 if nargin<8
     verbose = true;
+end
+if nargin<9
+    fontsize = 22;
 end
 
 freq1 = zeros(ndraws, length(0:16));
@@ -119,9 +121,9 @@ close(htemp);
 
 % keyboard
 
-quantile_freq = plot_figure(G, freq1, centerbins1, rep, prefix, ['1' suffix]);
+quantile_freq = plot_figure(G, freq1, centerbins1, rep, prefix, ['1' suffix], fontsize);
 if strcmp(typegraph, 'bipartite')  
-    quantile_freq2 = plot_figure(G', freq2, centerbins2, rep, prefix, ['2' suffix]);
+    quantile_freq2 = plot_figure(G', freq2, centerbins2, rep, prefix, ['2' suffix], fontsize);
 end
 end
 
@@ -138,7 +140,7 @@ if i>5 && mod(i, ceil(niter/min(niter,s)))==0
 end
 end
 %%
-function quantile_freq = plot_figure(G, freq, centerbins, rep, prefix, suffix)
+function quantile_freq = plot_figure(G, freq, centerbins, rep, prefix, suffix, fontsize)
 
 quantile_freq = quantile(freq, [.025, .975]);
 plot_variance = @(x,lower,upper,color) fill([x,x(end:-1:1)],[upper,lower(end:-1:1)],color, 'EdgeColor', color);
@@ -153,12 +155,13 @@ set(gca,'YScale','log')
 hb = plot_degree(G);
 set(hb, 'markersize', 10, 'marker', 'o',...
     'markeredgecolor', 'none', 'markerfacecolor', [1, .75, .75])
-
-legend([ha, hb], {'95% posterior predictive', 'Data'})
+% keyboard
+legend([ha, hb], {'$95\%$ posterior predictive', 'Data'}, 'location', 'best', 'fontsize', fontsize, 'interpreter', 'latex')
 legend boxoff
 xlim([.8, 1e3])
 box off
 set(gca,'XMinorTick','on','YMinorTick','on')
+axis tight
 
 if ~isempty(rep)
     savefigs(gcf,  [prefix 'degreepostpred' suffix], rep);

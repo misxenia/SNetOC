@@ -13,13 +13,13 @@ for t=ntypes:-1:1 %% loop over types of nodes
         for j=1:numel(names)
             name = names{j};
             if isnumeric(samples(t,ch).(name))
-                for i = nsamples:-1:1;
+                for i = nsamples:-1:1
                     S(t,ch,i).(name) = samples(t,ch).(name)(:,:,i);
                 end
             else
                 fn = fieldnames(samples(t,ch).(name));
                 for v = 1:numel(fn)
-                    for i = nsamples:-1:1;
+                    for i = nsamples:-1:1
                         S(t,ch,i).(name).(fn{v}) = samples(t,ch).(name).(fn{v})(:,:,i);
                     end
                 end

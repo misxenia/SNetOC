@@ -2,11 +2,11 @@
 
 Matlab package for Sparse and modular Networks with Overlapping Communities (SNetOC)
 
-- Version: [v1.0](https://github.com/misxenia/SNetOC/releases/tag/v1.0)
-- Last modified: 2017-11-16
-- URL: <https://github.com/misxenia/SNetOC>
+- Version: [v1.1](https://github.com/OxCSML-BayesNP/SNetOC/releases/tag/v1.1)
+- Last modified: 2020-01-24
+- URL: <https://github.com/OxCSML-BayesNP/SNetOC>
 
-[**Download the package**](https://github.com/misxenia/SNetOC/archive/master.zip)
+[**Download the package**](https://github.com/OxCSML-BayesNP/SNetOC/archive/master.zip)
 
 # Description
 
@@ -20,11 +20,11 @@ The package has been tested on **Matlab R2016a**, **R2017a** and **R2017b** and 
 
 # Reference
 
-A. Todeschini, X. Miscouridou, F. Caron, _Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities_. **arXiv:1602.02114**. [Download paper](https://arxiv.org/abs/1602.02114 ).
+A. Todeschini, X. Miscouridou, F. Caron, **Exchangeable Random Measures for Sparse and Modular Graphs with Overlapping Communities**. _arXiv:1602.02114_. To appear in _Journal of the Royal Statistical Society: Series B_ [Download paper](https://arxiv.org/abs/1602.02114 ).
 
 # Installation
 
-1. [Download the zip file](https://github.com/misxenia/SNetOC/archive/master.zip)
+1. [Download the zip file](https://github.com/OxCSML-BayesNP/SNetOC/archive/master.zip)
 2. Unzip it in some folder
 3. Run the test file `test.m`
 
@@ -44,10 +44,10 @@ to be added to the Matlab path, using the command `addpath` (see the test file).
 You can run multiple MCMC chains in parallel by calling the `parpool` command 
 before running the following scripts. This requires the Parallel Computing Toolbox.
 
-- `demo_simulations.m`: posterior inference on a simulated graph under the CCRM model. [[html version](https://misxenia.github.io/SNetOC/demo_simulations.html)]
-- `demo_polblogs.m`: posterior inference on the polblogs graph under the CCRM model. [[html version](https://misxenia.github.io/SNetOC/demo_polblogs.html)]
-- `demo_usairport.m`: posterior inference on the USairport graph under the CCRM model. [[html version](https://misxenia.github.io/SNetOC/demo_usairport.html)]
-- `demo_overlappingcommunity.m`: posterior inference on the polblogs graph under the CCRM model using the wrapper function `overlapping_community_detection`. [[html version](https://misxenia.github.io/SNetOC/demo_overlappingcommunity.html)]
+- `demo_simulations.m`: posterior inference on a simulated graph under the CCRM model. [[html version](https://OxCSML-BayesNP.github.io/SNetOC/demo_simulations.html)]
+- `demo_polblogs.m`: posterior inference on the polblogs graph under the CCRM model. [[html version](https://OxCSML-BayesNP.github.io/SNetOC/demo_polblogs.html)]
+- `demo_usairport.m`: posterior inference on the USairport graph under the CCRM model. [[html version](https://OxCSML-BayesNP.github.io/SNetOC/demo_usairport.html)]
+- `demo_overlappingcommunity.m`: posterior inference on the polblogs graph under the CCRM model using the wrapper function `overlapping_community_detection`. [[html version](https://OxCSML-BayesNP.github.io/SNetOC/demo_overlappingcommunity.html)]
 - `MMSB_polblogs.m`: posterior inference on the polblogs graph the mixed membership stochastic blockmodel.
 - `MMSB_usairport.m`: posterior inference on the USairport graph the mixed membership stochastic blockmodel.
 - `MMSB_simulations.m`: posterior inference on a simulated graph under the mixed membership stochastic blockmodel.
@@ -63,13 +63,18 @@ before running the following scripts. This requires the Parallel Computing Toolb
 
 # Changes
 
-### [v1.0](https://github.com/misxenia/SNetOC/releases/tag/v1.0) (2017-11-16)
+### [v1.1](https://github.com/OxCSML-BayesNP/SNetOC/releases/tag/v1.0) (2020-01-24)
+
+- Some fixes
+- Updated demo scripts
+
+### [v1.0](https://github.com/OxCSML-BayesNP/SNetOC/releases/tag/v1.0) (2017-11-16)
 
 - First release of the package.
 
 # Copyright
 
-`SNetOC` is Copyright (c) 2016-2017 [A. Todeschini](http://adrien.tspace.fr) (<adrien.todeschini@gmail.com>), [X. Miscouridou](http://www.stats.ox.ac.uk/~miscouri/) (<xenia.miscouridou@spc.ox.ac.uk>) and [F. Caron](http://www.stats.ox.ac.uk/~caron/) (<caron@stats.ox.ac.uk>).
+`SNetOC` is Copyright (c) 2016-2020 [A. Todeschini](http://adrien.tspace.fr) (<adrien.todeschini@gmail.com>), [X. Miscouridou](http://www.stats.ox.ac.uk/~miscouri/) (<xenia.miscouridou@spc.ox.ac.uk>) and [F. Caron](http://www.stats.ox.ac.uk/~caron/) (<caron@stats.ox.ac.uk>).
 All Rights Reserved.
 See the file `LICENSE.txt`.
 

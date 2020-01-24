@@ -165,7 +165,7 @@ hb = plot_degree(G);
 set(hb, 'markersize', 10, 'marker', 'o',...
     'markeredgecolor', 'none', 'markerfacecolor', [1, .75, .75])
 
-legend([ha, hb], {'95% posterior predictive', 'Data'})
+legend([ha, hb], {'$95\%$ posterior predictive', 'Data'})
 legend boxoff
 xlim([.8, 1e3])
 box off

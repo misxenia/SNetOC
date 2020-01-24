@@ -5,7 +5,7 @@
 % nonparametric approach.
 %
 % For downloading the package and information on installation, visit the
-% <https://github.com/misxenia/SNetOC SNetOC webpage>.
+% <https://github.com/OxCSML-BayesNP/SNetOC SNetOC webpage>.
 % 
 % Reference: 
 %
@@ -17,9 +17,9 @@
 % * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
 % * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
 % 
-% Tested on Matlab R2016a. Requires the Statistics toolbox.
+% Tested on Matlab R2017a. Requires the Statistics toolbox.
 %
-% Last Modified: 10/10/2017
+% Last Modified: 01/2020
 %%
 
 %% General settings
@@ -75,7 +75,7 @@ meta.degree = num2cell(full(sum(G,2)));
 fn = fieldnames(meta);
 
 % Plot adjacency matrix
-figure
+figure;
 spy(G);
 xlabel(labels{2})
 ylabel(labels{1})
@@ -93,18 +93,20 @@ nchains = 3;
 if istest
     niterinit = 1000;
     niter = 20000;
-    nsamples = 100; 
+    nsamples = 100;
+    ndraws = 100;
 else
     niterinit = 10000;
-    niter = 200000;
-    nsamples = 500; 
+    niter = 1e7;
+    nsamples = 1000;
+    ndraws = 500;
 end   
 nburn = floor(niter/2);
 thin = ceil((niter-nburn)/nsamples); 
 verbose = true;
 
 % Create the graphMCMC object
-objmcmc = graphmcmc(objprior, niter, nburn, thin, nchains);
+objmcmc = graphmcmc(objprior, niter, 0, thin, nchains);
 
 % Run initialisation
 init = graphinit(objmcmc, G, niterinit);
@@ -119,24 +121,47 @@ objmcmc = graphmcmcsamples(objmcmc, G, verbose, init);
 % Print summary in text file
 print_summary(['summary_' num2str(p) 'f.txt'], titlenetwork, G, niter, nburn, nchains, thin, p, outpath, tstart)
 
+% Save workspace
+save(fullfile(outpath, ['workspace_' num2str(p) 'f.mat']))
+
+%% 
+
+% Log posterior approximation
+[lp_nonlat, lp_lat, ll_nonlat, ll_lat] = logpost_approx(objmcmc, G);
+
+%% discard burnin
+objmcmc_noburn = objmcmc;
+objmcmc_noburn.samples = discard(objmcmc.samples, floor(nburn/objmcmc.settings.thin));
+objmcmc_noburn.settings.nburn = nburn;
+
 %%
 
 % Point estimation of the model parameters
-[estimates, C_st] = graphest(objmcmc);
-
-% Save workspace
-save(fullfile(outpath, ['workspace_' num2str(p) 'f.mat']))
+[estimates, C_st] = graphest(objmcmc_noburn);
 
 %% Plots
 %
 
 prefix = sprintf('%s_%df_', name, p);
 suffix = '';
+%%
+
+% Plot Log posterior approximation
+iter = (1:size(lp_nonlat,1))*thin;
+plot_logpost(lp_nonlat, iter, [], 'Log-posterior', outpath, prefix, '_nonlat');
+plot_logpost(lp_lat, iter, [], 'Log-posterior', outpath, prefix, '_lat');
+
+% Plot log-posterior autocorr
+lp_nonlat_noburn = lp_nonlat(floor(nburn/niter*size(lp_nonlat, 1)):end, :);
+lp_lat_noburn = lp_lat(floor(nburn/niter*size(lp_lat, 1)):end, :);
+plot_autocorr_logpost(lp_nonlat_noburn, thin, 'Log-posterior', outpath, prefix, '_nonlat');
+plot_autocorr_logpost(lp_lat_noburn, thin, 'Log-posterior', outpath, prefix, '_lat');
 
 % Plot cost
 if ~isempty(C_st)
     plot_cost(C_st, outpath, prefix, suffix);
 end
+
 % Assign max feature for community detection
 [~, nodefeat] = max(estimates.w, [],2);
 
@@ -160,7 +185,7 @@ end
 variables = {'logalpha2', 'sigma', 'Fparam.a', 'Fparam.b2', 'mean_w_rem'};
 namesvar = {'$\log \tilde\alpha$', '$\sigma$', '$a$', '$\tilde b$', '$\overline{w}_{\ast}$'};
 plot_trace(objmcmc.samples, objmcmc.settings, variables, namesvar, [], outpath, prefix, suffix);
-plot_hist(objmcmc.samples, variables, namesvar, [], ind_features, [], outpath, prefix, suffix);
+plot_hist(objmcmc_noburn.samples, variables, namesvar, [], ind_features, [], outpath, prefix, suffix);
 
 %%
 
@@ -250,6 +275,7 @@ print_features( fullfile(outpath, ['featuresnorm_' num2str(p) 'f_tex.txt']), ...
 
 
 %%
+
+% Plot posterior predictive of degrees
+plot_degreepostpred(G, objmcmc_noburn, ndraws, 1e-6, outpath, prefix, suffix);
  
- % Plot posterior predictive of degrees
- plot_degreepostpred(G, objmcmc, nsamples, 1e-6, outpath, prefix, suffix);

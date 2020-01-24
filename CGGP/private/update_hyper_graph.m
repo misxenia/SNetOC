@@ -25,7 +25,7 @@ function [w_rem, alpha, logalpha, sigma, tau, Fdist, gamma, rate] = ...
 %   - rw_std: standard deviation for random walk for the MH update of sigma 
 %   - rw_alpha: standard deviation for random walk for the MH update of alpha 
 %   - MH_nb: number of MH steps
-%   - sigma_01: logical indicating whether sigma = 1  
+%   - sigma_01: logical indicating whether sigma is in (0,1)  
 %   - sigma_neg: logical indicating whether sigma is negative  
 %   - sumsmall_arg
 %

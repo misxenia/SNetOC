@@ -1,5 +1,4 @@
 function [h_boxplot, h_names] = plot_groups(w, groups, row_names, ind_features, label_groups, featnames, color, rep, prefix, suffix)
-
 % plot_groups plots the weights of the nodes in groups
 % (according to the true underlying groups)
 %

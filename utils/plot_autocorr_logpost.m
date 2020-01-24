@@ -1,4 +1,4 @@
-function h_trace = plot_logpost(logp, iter, trueval, namevar, rep, prefix, suffix, leg, fontsize)
+function h_trace = plot_autocorr_logpost(logp, thin, namevar, rep, prefix, suffix, leg, fontsize)
 % plot_logpost plots the given log posterior probability distributions 
 %
 % INPUT
@@ -13,58 +13,57 @@ function h_trace = plot_logpost(logp, iter, trueval, namevar, rep, prefix, suffi
 [nsamples, nchains] = size(logp);
 
 if nargin<2
-    iter = 1:nsamples;
+    thin = 1;
 end
 
 colour = get(gca,'ColorOrder');
 nbcolour = size(colour, 1);
 
 if nargin<3
-    trueval = {};
-end
-if nargin<4
     namevar = 'Log-posterior';
 end
-if nargin<5
+if nargin<4
     rep = [];
 end
-if nargin<6
+if nargin<5
     prefix = '';
 end
-if nargin<7
+if nargin<6
     suffix = '';
 end
-if nargin<8
+if nargin<7
     leg = cell(nchains, 1);
     for k=1:nchains
         leg{k} = ['Chain ' num2str(k)];
     end
 end
-if nargin<9
+
+if nargin<8
     fontsize=22;
 end
 
 
 h_trace = figure;
+hold on
 for k=1:nchains
     colourk = colour(mod(k-1, nbcolour)+1,:);
-    h(k,:) = plot(iter, logp(:,k), 'color', colourk);
+    
+    [acf, lags, ~] = autocorr(logp(:,k), floor(nsamples/2));
+    lags = lags * thin;
+    
+    h(k,:) = plot(lags, acf, 'color', colourk);
     hold on
 end
 
-if ~isempty(trueval)
-    h_true = plot([iter(1); iter(end)], [trueval(:)'; trueval(:)'], 'g--', 'linewidth', 3);
-%     legend([h(:,1); h_true(1)], [leg; 'True'], 'fontsize', fontsize, 'location', 'Best','Interpreter','latex');
-end
 legend(h(:,1), leg, 'fontsize', fontsize, 'location', 'Best', 'Interpreter','latex');
 
 legend boxoff
-xlabel('MCMC iterations', 'fontsize', fontsize,'Interpreter','latex');
-ylabel(namevar, 'fontsize', fontsize, 'interpreter', 'latex');
+xlabel('Lag', 'fontsize', fontsize,'Interpreter','latex');
+ylabel([namevar, ' Autocorrelation'], 'fontsize', fontsize, 'interpreter', 'latex');
 box off
 axis tight
-xlim([iter(1), iter(end)])
+xlim([lags(1), lags(end)])
 clear h;
 if ~isempty(rep)
-    savefigs(gcf, [prefix 'trace_logpost' suffix], rep);
+    savefigs(gcf, [prefix 'autocorr_logpost' suffix], rep);
 end

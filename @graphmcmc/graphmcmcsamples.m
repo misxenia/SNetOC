@@ -25,12 +25,7 @@ function objmcmc = graphmcmcsamples(objmcmc, G, verbose, init, varargin)
 % xenia.miscouridou@spc.ox.ac.uk
 % October 2017
 
-isparallel = false; 
-if ~isempty(ver('distcomp')) % Check if parallel toolbox installed
-    if getpoolsize()>0 % If parallel pool initiated
-        isparallel = true; % Will run MCMC chains in parallel using parallel computing toolbox
-    end
-end
+poolsize = getpoolsize();
 
 if nargin<3
     verbose = true;
@@ -69,8 +64,8 @@ switch (objmodel.type)
         switch(objmodel.typegraph)
             case {'undirected', 'simple'}  
                 % Run MCMC algorithms
-                if isparallel                   
-                    parfor (k=1:objmcmc.settings.nchains, getpoolsize()) 
+                if poolsize                   
+                    parfor (k=1:objmcmc.settings.nchains, poolsize) 
                         if verbose
                             print_info_chain(k, objmcmc.settings.nchains);                            
                         end
@@ -92,8 +87,8 @@ switch (objmodel.type)
                 objmcmc.stats = stats;
             case 'bipartite'
                 % Run MCMC algorithms
-                if isparallel                    
-                    parfor (k=1:objmcmc.settings.nchains, getpoolsize()) 
+                if poolsize                    
+                    parfor (k=1:objmcmc.settings.nchains, poolsize) 
                         rng(seed+k);
                         if verbose
                             print_info_chain(k, objmcmc.settings.nchains);                            
@@ -121,10 +116,10 @@ switch (objmodel.type)
         switch(objmodel.typegraph)
             case {'undirected', 'simple'}
                 % Run MCMC algorithms
-                if ~isparallel
-                    [samples,stats] = for_CGGPgraphmcmc(seed, G, objmodel, objmcmc, objmodel.typegraph, verbose, init, varargin{:});
-                else
+                if poolsize
                     [samples,stats] = parfor_CGGPgraphmcmc(seed, G, objmodel, objmcmc, objmodel.typegraph, verbose, init, varargin{:});
+                else
+                    [samples,stats] = for_CGGPgraphmcmc(seed, G, objmodel, objmcmc, objmodel.typegraph, verbose, init, varargin{:});
                 end
                 for ch=1:objmcmc.settings.nchains 
                     % Compute some additional summary
@@ -134,9 +129,16 @@ switch (objmodel.type)
                 objmcmc.samples = samples;
                 objmcmc.stats = stats;                
              case 'bipartite'
-                 error('Sampler for CGGP for bipartite graphs not implemented')
+%                  error('Sampler for CGGP for bipartite graphs not implemented')
+                if poolsize
+                    [samples,stats] = parfor_CGGPbipgraphmcmc(seed, G, objmodel, objmcmc, verbose, init, varargin{:});
+                else
+                    [samples,stats] = for_CGGPbipgraphmcmc(seed, G, objmodel, objmcmc, verbose, init, varargin{:});
+                end
+                objmcmc.samples = samples;
+                objmcmc.stats = stats;         
             otherwise
-                error('Unknown type of graph %s', objmodel.typegraph);
+                error('Unknown type of graph %s', objmodel.typegraph);                
         end
         
         
@@ -144,10 +146,10 @@ switch (objmodel.type)
         switch(objmodel.typegraph)
             case {'undirected', 'simple'}
                 % Run MCMC algorithms
-                if ~isparallel   
-                    [samples, stats] = for_mmsbmcmc(seed, G, objmodel, objmcmc, verbose);
-                else  
+                if poolsize   
                     [samples,stats] = parfor_mmsbmcmc(seed, G, objmodel, objmcmc, verbose);
+                else  
+                    [samples, stats] = for_mmsbmcmc(seed, G, objmodel, objmcmc, verbose);
                 end
                 objmcmc.samples = samples;
                 objmcmc.stats = stats;
@@ -187,6 +189,29 @@ end
 end
 
 
+function [samples,stats] = parfor_CGGPbipgraphmcmc(seed, G, objmodel, objmcmc, verbose, init, varargin)
+parfor (k=1:objmcmc.settings.nchains, getpoolsize())
+    rng(seed+k);
+    if verbose
+        print_info_chain(k, objmcmc.settings.nchains);                            
+    end
+    [samples(:,k), stats(:,k)] = CGGPbipgraphmcmc(G, ...
+        objmodel.param, objmcmc.settings, verbose, 'init', init(:,k), varargin{:});
+end
+end
+
+function  [samples,stats] = for_CGGPbipgraphmcmc(seed, G, objmodel, objmcmc, verbose, init, varargin)
+for k=1:objmcmc.settings.nchains
+    rng(seed+k);
+    if verbose
+        print_info_chain(k, objmcmc.settings.nchains);                            
+    end
+    [samples(:,k), stats(:,k)] = CGGPbipgraphmcmc(G, ...
+        objmodel.param, objmcmc.settings, verbose, 'init', init(:,k), varargin{:});
+end
+end
+
+
 function [samples,stats] = for_mmsbmcmc(seed, G, objmodel, objmcmc,verbose)
 for k=1:objmcmc.settings.nchains
     rng(seed+k);
@@ -215,7 +240,6 @@ fprintf('-----------------------------------\n')
 end
 
 function print_info(objmcmc, G, init)
-
 niter = objmcmc.settings.niter;
 nchains = objmcmc.settings.nchains;
 % Get an estimate of the computation time by running a short chain
@@ -231,7 +255,7 @@ hours = floor(time/3600);
 minutes = (time - hours*3600)/60;
 
 % Compute number of nodes, edges and missing data
-nnodes = size(G, 1);
+nnodes = size(G);
 if strcmp(objmcmc.prior.typegraph, 'simple') % If no self-loops
     [ind1, ~] = find(triu(G, 1));
 else
@@ -243,10 +267,13 @@ nmiss = nnz(G_ismiss);
 
 % Print some info
 fprintf('-----------------------------------\n')
-fprintf('Start MCMC for %s graphs\n', objmcmc.prior.type)
-fprintf('Nb of nodes: %d - Nb of edges: %d (%d missing)\n', nnodes, nedges-nmiss, nmiss);
+fprintf('Start MCMC for %s %s graphs\n', objmcmc.prior.typegraph, objmcmc.prior.type)
+fprintf('Nb of nodes: %dx%d - Nb of edges: %d (%d missing)\n', nnodes, nedges-nmiss, nmiss);
 fprintf('Nb of chains: %d - Nb of iterations: %d\n', objmcmc.settings.nchains, objmcmc.settings.niter)
-fprintf('Nb of parallel workers: %d\n', max(getpoolsize(), 1))
+poolsize = getpoolsize();
+if poolsize
+    fprintf('Nb of parallel workers: %d\n', poolsize)
+end
 fprintf('Estimated computation time: %.0f hour(s) %.0f minute(s)\n', hours, minutes);
 fprintf('Estimated end of computation: %s \n', datestr(now + time/3600/24));
 end

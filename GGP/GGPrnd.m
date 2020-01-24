@@ -76,26 +76,36 @@ if nargin<5 % Use simple thinning
     sigma = max(sigma, 0); %%% set sigma=0 if in [-1e-8, 0] - This needs to be fixed
     
     a = 5;
-    % Use a truncated Pareto on [0,a]
-    if sigma>0
-        lograte = log(alpha)  - log(sigma) - tau*T - gammaln(1-sigma) + log(T^(-sigma) - a^(-sigma));
-        Njumps = poissrnd(exp(lograte));
-        log_N1 = - 1/sigma * log(-(rand(Njumps, 1) * (a^sigma-T^sigma)-a^sigma)./ (a*T)^sigma); % Sample from truncated Pareto
+    if T<a
+        % Use a truncated Pareto on [T,a]
+        if sigma>0
+            lograte = log(alpha)  - log(sigma) - tau*T - gammaln(1-sigma) + log(T^(-sigma) - a^(-sigma));
+            Njumps = poissrnd(exp(lograte));
+            if isnan(Njumps)
+                keyboard
+            end
+            log_N1 = - 1/sigma * log(-(rand(Njumps, 1) * (a^sigma-T^sigma)-a^sigma)./ (a*T)^sigma); % Sample from truncated Pareto
+        else
+            lograte = log(alpha)  - tau*T - gammaln(1-sigma) + log(log(a) - log(T));
+            Njumps = poissrnd(exp(lograte));
+            log_N1 = (rand(Njumps, 1) * (log(a)-log(T)) + log(T)); 
+        end       
+        N1 = exp(log_N1);
+        ind1  = log(rand(Njumps, 1)) < tau*(T - N1);
+        %sum(ind1)/length(ind1);
+        N1 = N1(ind1);
     else
-        lograte = log(alpha)  - tau*T - gammaln(1-sigma) + log(log(a) - log(T));
-        Njumps = poissrnd(exp(lograte));
-        log_N1 = (rand(Njumps, 1) * (log(a)-log(T)) + log(T)); 
-    end   
+        N1 = zeros(0, 1);
+        a = T;
+    end
     
-    N1 = exp(log_N1);
-    ind1  = log(rand(Njumps, 1)) < tau*(T - N1);sum(ind1)/length(ind1);
-    
-    % Use a truncated exponential on (a,+infty)
+    % Use a truncated exponential on (a,+infty) or (T, infty)
     lograte = log(alpha) - tau*a - (1+sigma)*log(a) - log(tau) - gammaln(1-sigma);
     Njumps = poissrnd(exp(lograte));
-    log_N2 = texprnd(tau, a, Njumps, 1);    % Sample from truncated exponential        
+    log_N2 = log(a + exprnd(1/tau, Njumps, 1)); % log_N2 = texprnd(tau, a, Njumps, 1);    % Sample from truncated exponential        
     ind2  = log(rand(Njumps, 1)) < -(1+sigma)* (log_N2 - log(a) );
-    N = [N1(ind1); exp(log_N2(ind2))];
+    N2 = exp(log_N2(ind2));
+    N = [N1; N2];
     
 
 %     if T > sigma/tau

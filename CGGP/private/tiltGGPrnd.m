@@ -109,7 +109,8 @@ if isempty(Njumps)
     if sigma>1e-3
         Njumps = floor(exp(logalpha - log(sigma) -gammaln(1-sigma) - sigma*log(T)));
     else
-        Njumps = floor(-exp(logalpha)*log(T));
+        Njumps = max(1, floor(-exp(logalpha)*log(T)));
+        % TODO: we should find a better estimate for larger values of T
     end
 end
 
@@ -123,7 +124,7 @@ end
 %% Adaptive thinning
 % with truncation level T
 % Method described in Favaro and Teh, 2012
-N = zeros(ceil(Njumps+3*sqrt(Njumps)), 1);
+N = zeros(ceil(Njumps+3*realsqrt(Njumps)), 1);
 t = T;
 k = 0;
 

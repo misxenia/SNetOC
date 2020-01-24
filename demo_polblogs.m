@@ -5,7 +5,7 @@
 % nonparametric approach.
 %
 % For downloading the package and information on installation, visit the
-% <https://github.com/misxenia/SNetOC SNetOC webpage>.
+% <https://github.com/OxCSML-BayesNP/SNetOC SNetOC webpage>.
 % 
 % Reference: 
 %
@@ -17,9 +17,9 @@
 % * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
 % * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
 % 
-% Tested on Matlab R2016a. Requires the Statistics toolbox.
+% Tested on Matlab R2017a. Requires the Statistics toolbox.
 %
-% Last Modified: 10/2017
+% Last Modified: 01/2020
 %%
 
 %% General settings
@@ -72,6 +72,7 @@ G = Problem.A | Problem.A'; % make undirected graph
 G = logical(G-diag(diag(G))); % remove self edges (#3)
 
 % Collect metadata
+clear meta
 meta.name = cellstr(Problem.aux.nodename);
 meta.source = cellstr(Problem.aux.nodesource);
 meta.isright = logical(Problem.aux.nodevalue);
@@ -91,7 +92,7 @@ for i=1:length(fn)
 end
 
 % Plot adjacency matrix (sorted)
-figure('name', 'Adjacency matrix (sorted by ground truth political leaning)')
+figure('name', 'Adjacency matrix (sorted by ground truth political leaning)');
 spy(G);
 xlabel(labels{2})
 ylabel(labels{1})
@@ -106,7 +107,7 @@ for i=1:length(fn)
 end
 
 % Plot adjacency matrix (unsorted)
-figure('name', 'Adjacency matrix (unsorted)')
+figure('name', 'Adjacency matrix (unsorted)');
 spy(G);
 xlabel(labels{2})
 ylabel(labels{1})
@@ -114,7 +115,7 @@ ylabel(labels{1})
 %%
 
 % Plot degree distribution
-figure('name', 'Empirical degree distribution')
+figure('name', 'Empirical degree distribution');
 hdeg = plot_degree(G);
 set(hdeg, 'markersize', 10, 'marker', 'o','markeredgecolor', 'none', 'markerfacecolor', [1, .75, .75]);
 
@@ -130,19 +131,20 @@ nchains = 3;
 if istest
     niterinit = 1000;
     niter = 10000;
-    nsamples = 100; 
+    nsamples = 100;
+    ndraws = 100; 
 else
     niterinit = 10000;
-    niter = 200000;
-    nsamples = 500; 
+    niter = 2e6;
+    nsamples = 1000;
+    ndraws = 500;
 end   
 nburn = floor(niter/2);
-
 thin = ceil((niter-nburn)/nsamples); 
 verbose = true;
 
 % Create the graphMCMC object
-objmcmc = graphmcmc(objprior, niter, nburn, thin, nchains);
+objmcmc = graphmcmc(objprior, niter, 0, thin, nchains);
 
 % Run initialisation
 init = graphinit(objmcmc, G, niterinit);
@@ -157,18 +159,56 @@ objmcmc = graphmcmcsamples(objmcmc, G, verbose, init);
 % Print summary in text file
 print_summary(['summary_' num2str(p) 'f.txt'], titlenetwork, G, niter, nburn, nchains, thin, p, outpath, tstart)
 
-%%
-
-% Point estimation of the model parameters
-[estimates, C_st] = graphest(objmcmc);
-
 % Save workspace
-save(fullfile(outpath, ['workspace_' num2str(p) 'f.mat']))
+save(fullfile(outpath, ['workspace_' num2str(p) 'f.mat']), '-v7.3')
+
+%% 
+
+% Log posterior approximation
+[lp_nonlat, lp_lat, ll_nonlat, ll_lat] = logpost_approx(objmcmc, G);
+
+%% 
+
+% Compute identifiable parameters
+for ch = 1:size(objmcmc.samples, 2)
+    S = objmcmc.samples(1,ch);
+    objmcmc.samples(1,ch).varsigma1 = -S.alpha .* S.tau.^S.sigma ./ S.sigma;
+    a_sigma = S.Fparam.a.*S.sigma;
+    objmcmc.samples(1,ch).varsigma2 = -a_sigma./S.Fparam.b2;
+    objmcmc.samples(1,ch).varsigma3 = a_sigma.*(S.sigma-S.Fparam.a-1)./(S.Fparam.b2.^2);
+end
+
+    
+%% discard burnin
+objmcmc_noburn = objmcmc;
+objmcmc_noburn.samples = discard(objmcmc.samples, floor(nburn/objmcmc.settings.thin));
+objmcmc_noburn.settings.nburn = nburn;
+
+%% Point estimation of the model parameters
+[estimates, C_st] = graphest(objmcmc_noburn);
 
 %% Plots 
 
 prefix = sprintf('%s_%df_', name, p);
 suffix = '';
+
+%%
+
+% Plot Log posterior approximation
+iter = (1:size(lp_nonlat,1))*thin;
+plot_logpost(lp_nonlat, iter, [], 'Log-posterior', outpath, prefix, '_nonlat');
+plot_logpost(lp_lat, iter, [], 'Log-posterior', outpath, prefix, '_lat');
+
+% Plot log-posterior autocorr
+lp_nonlat_noburn = lp_nonlat(floor(nburn/niter*size(lp_nonlat, 1)):end, :);
+lp_lat_noburn = lp_lat(floor(nburn/niter*size(lp_lat, 1)):end, :);
+plot_autocorr_logpost(lp_nonlat_noburn, thin, 'Log-posterior', outpath, prefix, '_nonlat');
+plot_autocorr_logpost(lp_lat_noburn, thin, 'Log-posterior', outpath, prefix, '_lat');
+
+% Plot cost
+if ~isempty(C_st)
+    plot_cost(C_st, outpath, prefix, suffix);
+end
 
 %%
 
@@ -185,19 +225,10 @@ featnames = {'Liberal', 'Conservative'};
 %%
 
 % Plot traces and histograms
-variables = {'logalpha', 'sigma', 'tau', 'Fparam.a', 'Fparam.b', 'mean_w_rem'};
-namesvar = {'$\log \alpha$', '$\sigma$', '$\tau$', '$a$', '$b$', '$\overline{w}_{\ast}$'};
+variables = {'varsigma1', 'varsigma2', 'varsigma3', 'mean_w_rem'};
+namesvar = {'$\varsigma_1$', '$\varsigma_2$', '$\varsigma_3$', '$\overline{w}_{\ast}$'};
 plot_trace(objmcmc.samples, objmcmc.settings, variables, namesvar, [], outpath, prefix, suffix);
-plot_hist(objmcmc.samples, variables, namesvar, [], ind_features, [], outpath, prefix, suffix);
-
-%%
-
-% Plot cost
-if ~isempty(C_st)
-    plot_cost(C_st, outpath, prefix, suffix);
-end
-
-
+plot_hist(objmcmc_noburn.samples, variables, namesvar, [], ind_features, [], outpath, prefix, suffix);
 
 %%
 
@@ -292,4 +323,4 @@ title('Correlation between features')
 %%
 
 % Plot posterior predictive of degree distribution
-plot_degreepostpred(G, objmcmc, nsamples, 1e-6, outpath, prefix, suffix);
+plot_degreepostpred(G, objmcmc_noburn, ndraws, 1e-6, outpath, prefix, suffix);

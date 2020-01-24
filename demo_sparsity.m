@@ -3,7 +3,7 @@
 % This Matlab script shows empirically the sparsity properties of a range of graph models.
 %
 % For downloading the package and information on installation, visit the
-% <https://github.com/misxenia/SNetOC SNetOCC webpage>.
+% <https://github.com/OxCSML-BayesNP/SNetOC SNetOCC webpage>.
 % 
 % Reference: 
 %
@@ -15,9 +15,9 @@
 % * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
 % * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
 % 
-% Tested on Matlab R2016a. Requires the Statistics toolbox.
+% Tested on Matlab R2017a. Requires the Statistics toolbox.
 %
-% Last Modified: 10/10/2017
+% Last Modified: 01/2020
 %%
 
 %% General settings
@@ -124,12 +124,14 @@ fontsize = 22;
 plotstyles = {'--+',':s',':d',':o'};
 colors = lines;
 for k=1:numel(obj)
-    leg{k} = sprintf('\\sigma = %g', obj{k}.param.sigma);
+    leg{k} = sprintf('$\\sigma = %g$', obj{k}.param.sigma);
 end
 set(0,'DefaultAxesFontSize', 16)
 set(0,'DefaultTextFontSize', fontsize)
 set(0,'DefaultLineLineWidth', 2)
 set(0,'DefaultLineMarkerSize', 8)
+set(0, 'defaultTextInterpreter', 'latex');
+set(0, 'defaultAxesTickLabelInterpreter', 'latex');
 close 
 
 % Degree distribution loglog plot
@@ -144,7 +146,7 @@ axis tight
 % ylim([10, 20000])
 xlabel('Degree', 'fontsize', fontsize)
 ylabel('Distribution', 'fontsize', fontsize)
-legend(leg, 'fontsize', fontsize, 'location', 'southwest')
+legend(leg, 'fontsize', fontsize, 'location', 'southwest', 'interpreter', 'latex')
 legend boxoff
 box off
 if saveplots
@@ -166,7 +168,7 @@ xlim([25, 3000])
 % ylim([10, 20000])
 xlabel('Number of nodes', 'fontsize', fontsize)
 ylabel('Number of edges', 'fontsize', fontsize)
-legend(leg, 'fontsize', fontsize, 'location', 'northwest')
+legend(leg, 'fontsize', fontsize, 'location', 'northwest', 'interpreter', 'latex')
 legend boxoff
 box off
 if saveplots
@@ -189,7 +191,7 @@ axis tight
 xlim([10, 2000])
 xlabel('Number of nodes', 'fontsize', fontsize)
 ylabel('Nb of edges / (Nb of nodes)^2', 'fontsize', fontsize)
-legend(leg,'fontsize', fontsize, 'location', 'southwest')
+legend(leg,'fontsize', fontsize, 'location', 'southwest', 'interpreter', 'latex')
 legend boxoff
 box off
 if saveplots
@@ -211,7 +213,7 @@ xlim([10, 2000])
 % ylim([1, 2000])
 xlabel('Number of nodes', 'fontsize', fontsize);
 ylabel('Number of nodes of degree one', 'fontsize', fontsize);
-legend(leg,'fontsize', fontsize, 'location', 'northwest');
+legend(leg,'fontsize', fontsize, 'location', 'northwest', 'interpreter', 'latex');
 legend('boxoff');
 legend boxoff
 box off

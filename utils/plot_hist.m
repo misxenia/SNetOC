@@ -1,5 +1,4 @@
-function h_hist = plot_hist(samples, variables, namesvar, trueval, ind_feat, col_feat, rep, prefix, suffix)
-
+function h_hist = plot_hist(samples, variables, namesvar, trueval, ind_feat, col_feat, rep, prefix, suffix, fontsize)
 % plot_hist plots the trace and histograms of the variables for the MCMC
 % output
 
@@ -48,13 +47,17 @@ if nargin<9
     suffix = '';
 end
 
+if nargin<10
+    fontsize=22;
+end
 
 ntypes = size(samples, 1);
+nvar = numel(variables);
 
 %% Trace posterior histograms for parameters
-h_hist = gobjects(ntypes, ntypes);
+h_hist = gobjects(ntypes, nvar);
 for t=1:ntypes% loop over types of nodes
-    for i=1:numel(variables)% loop over variables
+    for i=1:nvar% loop over variables
         var = strsplit(variables{i}, '.');
         h_hist(t, i) = figure;
         hold on
@@ -85,24 +88,26 @@ for t=1:ntypes% loop over types of nodes
                 set(h(k), 'FaceColor', col_feat(k,:), 'EdgeColor', 'w')
             end
             leg = cellfun(@(x) ['Feat. ' num2str(x)], num2cell(1:p), 'uniformoutput', false);
-            if ~isempty(trueval)
-                leg = [leg, 'True'];
-            end
-            legend(leg, 'location', 'northwest')
+%             if ~isempty(trueval)
+%                 leg = [leg, 'True'];
+%             end
+            legend(leg, 'location', 'northwest','Interpreter','latex', 'fontsize', fontsize)
             legend boxoff
         else
             h = findobj(gca, 'Type', 'patch');
             for k=1:numel(h)
                 set(h(k), 'EdgeColor', 'w')
             end
-            if ~isempty(trueval)
-                legend(h_true(1), 'True', 'location', 'northwest')
-                legend boxoff
-            end
+%             if ~isempty(trueval)
+%                 legend(h_true(1), 'True', 'location', 'northwest','Interpreter','latex')
+%                 legend boxoff
+%             end
         end
         
-        xlabel(namesvar{t,i}, 'fontsize', 16, 'interpreter', 'latex');
-        ylabel('Nb MCMC samples', 'fontsize', 16);
+        xlabel(namesvar{t,i}, 'fontsize', fontsize, 'interpreter', 'latex');
+        ylabel('Nb MCMC samples', 'fontsize', fontsize,'Interpreter','latex');
+        
+        axis tight
             
         box off
         if ~isempty(rep)

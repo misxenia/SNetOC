@@ -5,7 +5,7 @@
 % case) and the model of Todeschini et al. (misspecified case).
 %
 % For downloading the package and information on installation, visit the
-% <https://github.com/misxenia/SNetOC SNetOC webpage>.
+% <https://github.com/OxCSML-BayesNP/SNetOC SNetOC webpage>.
 % 
 % References:
 %
@@ -18,7 +18,7 @@
 % * <http://csml.stats.ox.ac.uk/people/miscouridou/ X. Miscouridou>, University of Oxford
 % * <http://www.stats.ox.ac.uk/~caron/ F. Caron>, University of Oxford
 % 
-% Tested on Matlab R2016a. Requires the Statistics toolbox.
+% Tested on Matlab R2017a. Requires the Statistics toolbox.
 %
 % Last Modified: 2017-09-15
 %%

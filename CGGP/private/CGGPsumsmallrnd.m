@@ -73,7 +73,7 @@ switch mufun
     case 'mu3'
         mu = mu3_fun(logalpha, sigma, tau, a, b, gamma, T);
     otherwise
-        error('Unknown function')
+        error(['Unknown function: ', mufun])
 end
 
 %% Compute the covariance
@@ -88,8 +88,8 @@ switch Varfun
 end
 
 %% Sample
-[~,err] = cholcov(Var);
-if err~=0
+[T,num] = cholcov(Var);
+if num>0 || isempty(T)
     S_w_small = max(0, mu);
 else
     S_w_small = max(0, mvnrnd(mu, Var, 1));

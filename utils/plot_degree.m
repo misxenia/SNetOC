@@ -1,5 +1,4 @@
-function [h2, centerbins, freq] = plot_degree(G, linespec, step)
-
+function [h2, centerbins, freq] = plot_degree(G, linespec, step, fontsize)
 % plot_degree plots the degree of each node for the observed
 % adgacency matrix G
 %
@@ -20,6 +19,9 @@ end
 if nargin<3
     step = 1;
 end
+if nargin<4
+    fontsize=22;
+end
 
 G(isnan(G)) = 0.5; % fill missing by 0.5
 deg = full(sum(G));
@@ -36,5 +38,5 @@ centerbins = edgebins;
 counts = histc(deg, edgebins);
 freq = counts./sizebins/size(G, 1);
 h2 = loglog(centerbins, freq, linespec);
-xlabel('Degree', 'fontsize', 16)
-ylabel('Distribution', 'fontsize', 16)
+xlabel('Degree', 'fontsize', fontsize,'Interpreter','latex')
+ylabel('Distribution', 'fontsize', fontsize,'Interpreter','latex')

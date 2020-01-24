@@ -1,5 +1,4 @@
 function [h, centerbins, out] = plot_loglog(x, y, linespec, step)
-
 %plot_loglog gives a log-log scale plot of the vectors  x Vs y
 %
 % INPUT
